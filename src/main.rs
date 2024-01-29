@@ -1,4 +1,3 @@
-
 use bevy::prelude::*;
 use td_foo::AppPlugin;
 
@@ -7,3 +6,4 @@ fn main() {
         .add_plugins(AppPlugin)
         .run()
 }
+

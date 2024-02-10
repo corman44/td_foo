@@ -8,7 +8,6 @@ pub const NORMAL_BUTTON_STYLE: Style = {
     style.width = Val::Px(220.0);
     style.justify_content = JustifyContent::SpaceEvenly;
     style.align_items = AlignItems::Center;
-    style.
     style
 };
 

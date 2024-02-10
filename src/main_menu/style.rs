@@ -4,10 +4,11 @@ pub const NORMAL_BUTTON_COLOR: Color = Color::rgb(0.15, 0.15, 0.15);
 
 pub const NORMAL_BUTTON_STYLE: Style = {
     let mut style = Style::DEFAULT;
-    style.height = Val::Px(80.0);
-    style.width = Val::Px(200.0);
-    style.justify_content = JustifyContent::Center;
+    style.height = Val::Px(100.0);
+    style.width = Val::Px(220.0);
+    style.justify_content = JustifyContent::SpaceEvenly;
     style.align_items = AlignItems::Center;
+    style.
     style
 };
 
@@ -47,3 +48,22 @@ pub const TITLE_STYLE: Style = {
     style
 };
 
+pub fn get_title_text_style(
+    asset_server: &Res<AssetServer>,
+) -> TextStyle {
+    TextStyle {
+        font: asset_server.load("fonts/Kenney Future.ttf"),
+        font_size: 64.0,
+        color: Color::WHITE,
+    }
+}
+
+pub fn get_button_text_style(
+    asset_server: &Res<AssetServer>,
+) -> TextStyle {
+    TextStyle {
+        font: asset_server.load("fonts/Kenney Future.ttf"),
+        font_size: 48.0,
+        color: Color::WHITE,
+    }
+}

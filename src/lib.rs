@@ -4,15 +4,17 @@ mod main_menu;
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
 use bevy_kira_audio::prelude::*;
 use game::{GamePlugin, GameState};
+use main_menu::MainMenuPlugin;
 
 pub struct AppPlugin;
 
 #[derive(States, Debug, Clone, Copy, Hash, PartialEq, Eq, Default)]
 pub enum AppState {
-    #[default]
-    MainMenu,
     Game,
     GameOver,
+    #[default]
+    MainMenu,
+    PauseMenu,
 }
 
 #[derive(Event)]
@@ -25,7 +27,7 @@ impl Plugin for AppPlugin {
         app.insert_resource(ClearColor(Color::BLACK))
             .add_state::<AppState>()
             .add_event::<GameOver>()
-            .add_plugins((DefaultPlugins, AudioPlugin, GamePlugin))
+            .add_plugins((DefaultPlugins, AudioPlugin, GamePlugin, MainMenuPlugin))
             .add_systems(Startup, spawn_camera)
             .add_systems(Update, (handle_game_over, exit_game, transition_to_game_state, transition_to_main_menu_state));
     }

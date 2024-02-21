@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{a11y::accesskit::TextAlign, prelude::*};
 
 use super::{component::{AttackButton, DefendButton, MainMenu, MultiplayerButton, OptionsButton, QuitButton}, style::{get_button_text_style, get_title_text_style, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_STYLE, TITLE_STYLE}};
 
@@ -53,7 +53,6 @@ pub fn build_main_menu(
                                         get_title_text_style(&asset_server),
                                     )
                                 ],
-                                alignment: TextAlignment::Center,
                                 ..default()
                             },
                             ..default()
@@ -90,7 +89,6 @@ pub fn build_main_menu(
                                             get_button_text_style(&asset_server),
                                         )
                                     ],
-                                    alignment: TextAlignment::Center,
                                     ..default()
                                 },
                                 ..default()
@@ -114,7 +112,6 @@ pub fn build_main_menu(
                                             get_button_text_style(&asset_server),
                                         )
                                     ],
-                                    alignment: TextAlignment::Center,
                                     ..default()
                                 },
                                 ..default()
@@ -138,7 +135,6 @@ pub fn build_main_menu(
                                             get_button_text_style(&asset_server),
                                         )
                                     ],
-                                    alignment: TextAlignment::Center,
                                     ..default()
                                 },
                                 ..default()
@@ -170,7 +166,6 @@ pub fn build_main_menu(
                                             get_button_text_style(&asset_server),
                                         )
                                     ],
-                                    alignment: TextAlignment::Center,
                                     ..default()
                                 },
                                 ..default()
@@ -193,7 +188,6 @@ pub fn build_main_menu(
                                                     get_button_text_style(&asset_server),
                                                 )
                                             ],
-                                            alignment: TextAlignment::Center,
                                             ..default()
                                         },
                                         ..default()

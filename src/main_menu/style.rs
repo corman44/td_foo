@@ -1,12 +1,13 @@
 use bevy::prelude::*;
 
 pub const NORMAL_BUTTON_COLOR: Color = Color::rgb(0.15, 0.15, 0.15);
+pub const MARGIN: Val = Val::Px(5.);
 
 pub const NORMAL_BUTTON_STYLE: Style = {
     let mut style = Style::DEFAULT;
     style.height = Val::Px(100.0);
     style.width = Val::Px(220.0);
-    style.justify_content = JustifyContent::SpaceEvenly;
+    style.justify_content = JustifyContent::Center;
     style.align_items = AlignItems::Center;
     style
 };

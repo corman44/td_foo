@@ -1,6 +1,6 @@
 use bevy::{a11y::accesskit::TextAlign, prelude::*};
 
-use super::{component::{AttackButton, DefendButton, MainMenu, MultiplayerButton, OptionsButton, QuitButton}, style::{get_button_text_style, get_title_text_style, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_STYLE, TITLE_STYLE}};
+use super::{ component::{MainMenu, MenuButtonAction}, style::{get_button_text_style, get_title_text_style, IMAGE_STYLE, MAIN_MENU_STYLE, MARGIN, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_STYLE, TITLE_STYLE}};
 
 pub fn spawn_main_menu(
     mut commands: Commands,
@@ -68,123 +68,32 @@ pub fn build_main_menu(
             // --- First Button Row Section ---
             parent.spawn(
                 NodeBundle {
-                    style: NORMAL_BUTTON_STYLE,
+                    style: Style {
+                        flex_direction: FlexDirection::Row,
+                        margin: UiRect::left(MARGIN),
+                        ..Default::default()
+                    },
                     ..default()
                 })
                 .with_children(|parent| {
-                    parent.spawn((
-                        ButtonBundle {
-                            style: NORMAL_BUTTON_STYLE,
-                            background_color: NORMAL_BUTTON_COLOR.into(),
-                            ..default()
-                        },
-                        DefendButton {},
-                    )).with_children(|parent| {
-                        parent.spawn(
-                            TextBundle {
-                                text: Text {
-                                    sections: vec![
-                                        TextSection::new(
-                                            "Defend",
-                                            get_button_text_style(&asset_server),
-                                        )
-                                    ],
-                                    ..default()
-                                },
-                                ..default()
-                            });
-                    });
-
-                    parent.spawn((
-                        ButtonBundle {
-                            style: NORMAL_BUTTON_STYLE,
-                            background_color: NORMAL_BUTTON_COLOR.into(),
-                            ..default()
-                        },
-                        AttackButton {},
-                    )).with_children(|parent| {
-                        parent.spawn(
-                            TextBundle {
-                                text: Text {
-                                    sections: vec![
-                                        TextSection::new(
-                                            "Attack",
-                                            get_button_text_style(&asset_server),
-                                        )
-                                    ],
-                                    ..default()
-                                },
-                                ..default()
-                            });
-                    });
-
-                    parent.spawn((
-                        ButtonBundle {
-                            style: NORMAL_BUTTON_STYLE,
-                            background_color: NORMAL_BUTTON_COLOR.into(),
-                            ..default()
-                        },
-                        MultiplayerButton {},
-                    )).with_children(|parent| {
-                        parent.spawn(
-                            TextBundle {
-                                text: Text {
-                                    sections: vec![
-                                        TextSection::new(
-                                            "Multiplayer",
-                                            get_button_text_style(&asset_server),
-                                        )
-                                    ],
-                                    ..default()
-                                },
-                                ..default()
-                            });
-                    });
-
-                });
-
-                // --- Second Button Row Section ---
-            parent.spawn(
-                NodeBundle {
-                    ..default()
-                })
-                .with_children(|parent| {
-                    parent.spawn((
-                        ButtonBundle {
-                            style: NORMAL_BUTTON_STYLE,
-                            background_color: NORMAL_BUTTON_COLOR.into(),
-                            ..default()
-                        },
-                        OptionsButton {},
-                    )).with_children(|parent| {
-                        parent.spawn(
-                            TextBundle {
-                                text: Text {
-                                    sections: vec![
-                                        TextSection::new(
-                                            "Defend",
-                                            get_button_text_style(&asset_server),
-                                        )
-                                    ],
-                                    ..default()
-                                },
-                                ..default()
-                            });
-
+                    for (action, text) in [
+                        (MenuButtonAction::Defend, "Defend"),
+                        (MenuButtonAction::Attack, "Attack"),
+                        (MenuButtonAction::Multiplayer, "Multiplayer")] {
                             parent.spawn((
                                 ButtonBundle {
                                     style: NORMAL_BUTTON_STYLE,
                                     background_color: NORMAL_BUTTON_COLOR.into(),
                                     ..default()
                                 },
-                                QuitButton {},
+                                action,
                             )).with_children(|parent| {
                                 parent.spawn(
                                     TextBundle {
                                         text: Text {
                                             sections: vec![
                                                 TextSection::new(
-                                                    "Quit",
+                                                    text,
                                                     get_button_text_style(&asset_server),
                                                 )
                                             ],
@@ -192,11 +101,45 @@ pub fn build_main_menu(
                                         },
                                         ..default()
                                     });
-                                });
+                            });
+                        }
                     });
-                });
 
-        })
+            // --- Second Button Row Section ---
+            parent.spawn(
+                NodeBundle {
+                    style: NORMAL_BUTTON_STYLE,
+                    ..default()
+                })
+                .with_children(|parent| {
+                    for (action, text) in [
+                        (MenuButtonAction::Settings, "Settings"),
+                        (MenuButtonAction::Quit, "Quit")] {
+                            parent.spawn((
+                                ButtonBundle {
+                                    style: NORMAL_BUTTON_STYLE,
+                                    background_color: NORMAL_BUTTON_COLOR.into(),
+                                    ..default()
+                                },
+                                action ,
+                            )).with_children(|parent| {
+                                parent.spawn(
+                                    TextBundle {
+                                        text: Text {
+                                            sections: vec![
+                                                TextSection::new(
+                                                    text,
+                                                    get_button_text_style(&asset_server),
+                                                )
+                                            ],
+                                            ..default()
+                                        },
+                                        ..default()
+                                    });
+                            });
+                        }
+                });
+            })
         .id();
         main_menu_entry
 }

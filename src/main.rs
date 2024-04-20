@@ -6,4 +6,3 @@ fn main() {
         .add_plugins(AppPlugin)
         .run()
 }
-

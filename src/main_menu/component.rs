@@ -4,16 +4,10 @@ use bevy::prelude::*;
 pub struct MainMenu {}
 
 #[derive(Component)]
-pub struct AttackButton {}
-
-#[derive(Component)]
-pub struct DefendButton {}
-
-#[derive(Component)]
-pub struct OptionsButton {}
-
-#[derive(Component)]
-pub struct MultiplayerButton {}
-
-#[derive(Component)]
-pub struct QuitButton {}
+pub enum MenuButtonAction {
+    Attack,
+    Defend,
+    Multiplayer,
+    Settings,
+    Quit,
+}

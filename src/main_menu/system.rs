@@ -26,8 +26,10 @@ pub fn build_main_menu(
         .spawn(
             (NodeBundle {
                 style: MAIN_MENU_STYLE,
+                // border_color: Color::RED.into(),
                 ..default()
             },
+
             MainMenu {},
         ))
         .with_children(|parent| {
@@ -35,6 +37,7 @@ pub fn build_main_menu(
             parent.spawn(
                 NodeBundle {
                     style: TITLE_STYLE,
+                    // border_color: Color::RED.into(),
                     ..default()
                 })
                 .with_children(|parent| {
@@ -68,22 +71,20 @@ pub fn build_main_menu(
             // --- First Button Row Section ---
             parent.spawn(
                 NodeBundle {
-                    style: Style {
-                        flex_direction: FlexDirection::Row,
-                        margin: UiRect::left(MARGIN),
-                        ..Default::default()
-                    },
+                    style: NORMAL_BUTTON_STYLE,
+                    // border_color: Color::RED.into(),
                     ..default()
                 })
                 .with_children(|parent| {
                     for (action, text) in [
                         (MenuButtonAction::Defend, "Defend"),
                         (MenuButtonAction::Attack, "Attack"),
-                        (MenuButtonAction::Multiplayer, "Multiplayer")] {
+                        (MenuButtonAction::Multiplayer, "Multi")] {
                             parent.spawn((
                                 ButtonBundle {
                                     style: NORMAL_BUTTON_STYLE,
                                     background_color: NORMAL_BUTTON_COLOR.into(),
+                                    // border_color: Color::RED.into(),
                                     ..default()
                                 },
                                 action,
@@ -97,6 +98,7 @@ pub fn build_main_menu(
                                                     get_button_text_style(&asset_server),
                                                 )
                                             ],
+                                            justify: JustifyText::Center,
                                             ..default()
                                         },
                                         ..default()
@@ -108,6 +110,7 @@ pub fn build_main_menu(
             // --- Second Button Row Section ---
             parent.spawn(
                 NodeBundle {
+                    // border_color: Color::RED.into(),
                     style: NORMAL_BUTTON_STYLE,
                     ..default()
                 })
@@ -118,6 +121,7 @@ pub fn build_main_menu(
                             parent.spawn((
                                 ButtonBundle {
                                     style: NORMAL_BUTTON_STYLE,
+                                    // border_color: Color::RED.into(),
                                     background_color: NORMAL_BUTTON_COLOR.into(),
                                     ..default()
                                 },
@@ -132,6 +136,7 @@ pub fn build_main_menu(
                                                     get_button_text_style(&asset_server),
                                                 )
                                             ],
+                                            justify: JustifyText::Center,
                                             ..default()
                                         },
                                         ..default()

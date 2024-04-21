@@ -1,7 +1,7 @@
 # Project
 Top Down, Two-D, Tower Defense
 
-Planned:
+Functionality:
  - [ ] Defense
  - [ ] Offense
  - [ ] Online Multiplayer

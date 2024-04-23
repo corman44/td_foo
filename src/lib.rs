@@ -22,12 +22,15 @@ pub struct GameOver {
     pub score: u32
 }
 
+#[derive(Component)]
+struct MyCameraMarker;
+
 impl Plugin for AppPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(ClearColor(Color::BLACK))
-            .init_state::<AppState>()
+            .add_state::<AppState>()
             .add_event::<GameOver>()
-            .add_plugins((DefaultPlugins, AudioPlugin, GamePlugin, MainMenuPlugin))
+            .add_plugins((DefaultPlugins.set(ImagePlugin::default_nearest()), AudioPlugin, GamePlugin, MainMenuPlugin))
             .add_systems(Startup, spawn_camera)
             .add_systems(Update, (handle_game_over, exit_game, transition_to_game_state, transition_to_main_menu_state));
     }
@@ -54,7 +57,7 @@ impl Plugin for AppPlugin {
 }
 
 pub fn exit_game(
-    keyboard_input: Res<ButtonInput<KeyCode>>,
+    keyboard_input: Res<Input<KeyCode>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Escape) {
@@ -78,20 +81,21 @@ pub fn spawn_camera(
 ) {
     let window = window_query.get_single().unwrap();
 
-    commands.spawn(
+    commands.spawn((
         Camera2dBundle {
             transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
             ..default()
-        }
-    );
+        },
+        MyCameraMarker,
+    ));
 }
 
 pub fn transition_to_game_state(
-    keyboard_input: Res<ButtonInput<KeyCode>>,
+    keyboard_input: Res<Input<KeyCode>>,
     app_state: Res<State<AppState>>,
     mut next_app_state: ResMut<NextState<AppState>>,
 ) {
-    if keyboard_input.just_pressed(KeyCode::KeyG) {
+    if keyboard_input.just_pressed(KeyCode::G) {
         if app_state.get() != &AppState::Game {
             println!("AppState: Game");
             next_app_state.set(AppState::Game);
@@ -100,13 +104,13 @@ pub fn transition_to_game_state(
 }
 
 pub fn transition_to_main_menu_state(
-    keyboard_input: Res<ButtonInput<KeyCode>>,
+    keyboard_input: Res<Input<KeyCode>>,
     app_state: Res<State<AppState>>,
     mut next_app_state: ResMut<NextState<AppState>>,
     mut next_sim_state: ResMut<NextState<GameState>>,
 ) {
 
-    if keyboard_input.just_pressed(KeyCode::KeyM) {
+    if keyboard_input.just_pressed(KeyCode::M) {
         if app_state.get() != &AppState::MainMenu {
             println!("AppState: MainMenu");
             next_app_state.set(AppState::MainMenu);

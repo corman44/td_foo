@@ -13,5 +13,8 @@ dewatch:
 inwatch:
     cargo watch -x "check" -s "just info"
 
+tree:
+    cargo tree > tree.txt
+
 work:
     cargo watch -x "check" -s "just error"

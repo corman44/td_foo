@@ -98,7 +98,6 @@ pub fn build_main_menu(
                                                     get_button_text_style(&asset_server),
                                                 )
                                             ],
-                                            justify: JustifyText::Center,
                                             ..default()
                                         },
                                         ..default()
@@ -136,7 +135,6 @@ pub fn build_main_menu(
                                                     get_button_text_style(&asset_server),
                                                 )
                                             ],
-                                            justify: JustifyText::Center,
                                             ..default()
                                         },
                                         ..default()

@@ -1,7 +1,9 @@
-use bevy::{prelude::*, render::camera::{self, CameraProjection, RenderTarget}};
+use bevy::{ecs::query, prelude::*, render::camera::{self, CameraProjection, RenderTarget}, text};
 use bevy_ecs_ldtk::prelude::*;
+use serde::de;
 
-use crate::{AppState, MyCameraMarker};
+use crate::{main_menu::style::MARGIN, AppState, MyCameraMarker};
+use super::components::AnimateRotation;
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Tile {
@@ -19,28 +21,12 @@ pub struct Map {
     pub width: usize,
 }
 
-pub struct MapPlugin;
-
-impl Plugin for MapPlugin {
-    fn build(&self, app: &mut App) {
-        let map = Map {
-            tiles: vec![],
-            height: 20,
-            width: 20,
-        };
-        app
-            .add_plugins(LdtkPlugin)
-            .insert_resource(map)
-            .add_systems(Startup, map_setup)
-            .add_systems(OnEnter(AppState::Game), (show_map, debug_render_text));
-    }
-}
-
 impl Map {
-    // TODO: implement map creation/updates
+    // TODO: implement map spawning and despawning
+
 }
 
-pub fn debug_render_text(
+pub fn debug_cameras(
     q: Query<&Camera>,
 ) {
     for camera in &q {
@@ -70,6 +56,36 @@ pub fn show_map(
 }
 
 // TODO: implement viewing of Map when transitioning to GameState
-pub fn map_setup() {
+pub fn map_setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>
+) {
+    // TODO: Spawn Text that spins with other Camera
+    commands.spawn((
+        Text2dBundle {
+            text: Text::from_section("Animate Rotation", get_text_style(&asset_server)),
+            ..default()
+        },
+        AnimateRotation,
+    ));
+}
 
+pub fn animate_rotation(
+    time: Res<Time>,
+    mut text_query: Query<&mut Transform, (With<Text>, With<AnimateRotation>)>,
+) {
+    for mut transform in &mut text_query {
+        transform.rotation = Quat::from_rotation_z(time.elapsed_seconds().cos());
+    }
+
+}
+
+pub fn get_text_style(
+    asset_server: &Res<AssetServer>,
+) -> TextStyle {
+    TextStyle {
+        font: asset_server.load("fonts/Kenney Future.ttf"),
+        font_size: 32.0,
+        color: Color::WHITE,
+    }
 }

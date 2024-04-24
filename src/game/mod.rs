@@ -7,7 +7,7 @@ pub mod systems;
 
 use bevy::prelude::*;
 
-use self::{attacker::systems::AttackerPlugin, defender::systems::DefenderPlugin, map::system::MapPlugin, overlay::systems::OverlayPlugin, player::systems::PlayerPlugin};
+use self::{attacker::systems::AttackerPlugin, defender::systems::DefenderPlugin, map::MapPlugin, overlay::systems::OverlayPlugin, player::systems::PlayerPlugin};
 
 pub struct GamePlugin;
 

@@ -88,6 +88,11 @@ pub fn spawn_camera(
         },
         MyCameraMarker,
     ));
+    // let mut camera = Camera2dBundle::default();
+    // camera.projection.scale = 0.5;
+    // camera.transform.translation.x += 1280.0 / 4.0;
+    // camera.transform.translation.y += 720.0 / 4.0;
+    // commands.spawn(camera);
 }
 
 pub fn transition_to_game_state(

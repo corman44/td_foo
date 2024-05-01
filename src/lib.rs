@@ -116,7 +116,7 @@ pub fn transition_to_game_state(
         if app_state.get() != &AppState::Game {
             println!("AppState: Game");
             next_app_state.set(AppState::Game);
-            next_sim_state.set(GameState::Running);
+            // next_sim_state.set(GameState::Running);
         }
     }
 }

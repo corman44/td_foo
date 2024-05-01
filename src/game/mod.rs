@@ -7,6 +7,8 @@ pub mod systems;
 
 use bevy::prelude::*;
 
+use crate::AppState;
+
 use self::{attacker::AttackerPlugin, defender::systems::DefenderPlugin, map::MapPlugin, overlay::systems::OverlayPlugin, player::systems::PlayerPlugin, systems::pause_game};
 
 pub struct GamePlugin;
@@ -16,7 +18,7 @@ impl Plugin for GamePlugin {
         app
             .add_state::<GameState>()
             .add_plugins((AttackerPlugin, DefenderPlugin, MapPlugin, OverlayPlugin, PlayerPlugin))
-            .add_systems(Update, pause_game);
+            .add_systems(Update, (pause_game, step_game_forward));
     }
 }
 
@@ -31,11 +33,14 @@ pub enum GameState {
 pub fn step_game_forward(
     keyboard_input: Res<Input<KeyCode>>,
     mut next_sim_state: ResMut<NextState<GameState>>,
+    app_state: Res<State<AppState>>,
 ) {
-    if keyboard_input.just_pressed(KeyCode::N) {
-            println!("GameState::Paused");
-            next_sim_state.set(GameState::Paused);
-            eprintln!("GameState::Running");
-            next_sim_state.set(GameState::Running);
+    if *app_state.get() == AppState::Game {
+        if keyboard_input.just_pressed(KeyCode::N) {
+                println!("GameState::Paused");
+                next_sim_state.set(GameState::Paused);
+                eprintln!("GameState::Running");
+                next_sim_state.set(GameState::Running);
+        }
     }
 }

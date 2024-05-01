@@ -1,7 +1,7 @@
 mod game;
 mod main_menu;
 
-use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
+use bevy::{app::AppExit, prelude::*, window::{PrimaryWindow, WindowResolution}};
 use bevy_kira_audio::prelude::*;
 use game::{GamePlugin, GameState};
 use main_menu::MainMenuPlugin;
@@ -30,9 +30,25 @@ impl Plugin for AppPlugin {
         app.insert_resource(ClearColor(Color::BLACK))
             .add_state::<AppState>()
             .add_event::<GameOver>()
-            .add_plugins((DefaultPlugins.set(ImagePlugin::default_nearest()), AudioPlugin, GamePlugin, MainMenuPlugin))
+            .add_plugins((
+                DefaultPlugins
+                    .set(ImagePlugin::default_nearest())
+                    .set(WindowPlugin {
+                        primary_window: Some(Window {
+                            resolution: WindowResolution::new(1024., 1024.).with_scale_factor_override(1.0),
+                            ..default()
+                        }),
+                        ..default()
+                    }),
+                AudioPlugin,
+                GamePlugin,
+                MainMenuPlugin))
             .add_systems(Startup, spawn_camera)
-            .add_systems(Update, (handle_game_over, exit_game, transition_to_game_state, transition_to_main_menu_state));
+            .add_systems(Update, (
+                handle_game_over,
+                exit_game,
+                transition_to_game_state,
+                transition_to_main_menu_state));
     }
 
     fn ready(&self, _app: &App) -> bool {
@@ -67,7 +83,7 @@ pub fn exit_game(
 
 pub fn handle_game_over(
     mut game_over_event_reader: EventReader<GameOver>,
-    mut next_app_state: ResMut<NextState<AppState>> // FIXME: not sure how to get mutable State (updated to app::init_state)
+    mut next_app_state: ResMut<NextState<AppState>> 
 ) {
     for event in game_over_event_reader.read() {
         println!("Final Score: {}", event.score.to_string());
@@ -88,22 +104,19 @@ pub fn spawn_camera(
         },
         MyCameraMarker,
     ));
-    // let mut camera = Camera2dBundle::default();
-    // camera.projection.scale = 0.5;
-    // camera.transform.translation.x += 1280.0 / 4.0;
-    // camera.transform.translation.y += 720.0 / 4.0;
-    // commands.spawn(camera);
 }
 
 pub fn transition_to_game_state(
     keyboard_input: Res<Input<KeyCode>>,
     app_state: Res<State<AppState>>,
     mut next_app_state: ResMut<NextState<AppState>>,
+    mut next_sim_state: ResMut<NextState<GameState>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::G) {
         if app_state.get() != &AppState::Game {
             println!("AppState: Game");
             next_app_state.set(AppState::Game);
+            next_sim_state.set(GameState::Running);
         }
     }
 }

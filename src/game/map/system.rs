@@ -1,7 +1,9 @@
-use bevy::{prelude::*, render::camera::{RenderTarget, ScalingMode}, transform};
+use bevy::{prelude::*, render::camera::{RenderTarget, ScalingMode}, utils::hashbrown::HashSet};
 use bevy_ecs_ldtk::prelude::*;
 
 use crate::MyCameraMarker;
+
+use super::AttackerArea;
 
 pub fn debug_cameras(
     q: Query<&Camera>,
@@ -28,7 +30,6 @@ pub fn zoom_to_map(
     let (mut camera, mut trans) = camera_query.single_mut();
     camera.viewport_origin = Vec2::ZERO;
     camera.scaling_mode = ScalingMode::Fixed { width: 1024.0, height: 1024.0 };
-    // TODO: maybe add translation to camera Query for moving camera to 512, 512?
     trans.translation.x = 0.0;
     trans.translation.y = 0.0;
 }
@@ -41,4 +42,23 @@ pub fn map_setup(
         ldtk_handle: asset_server.load("ldtk_map/td_foo_map1.ldtk").into(),
         ..Default::default()
     });
+}
+
+pub fn attack_locations(
+    attack_tiles: Query<&GridCoords, With<AttackerArea>>
+) {
+    let tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
+    // eprintln!("Attack Tiles: {:?}", tiles);
+}
+
+const GRID_SIZE: i32 = 64;
+
+pub fn translate_grid_coords_entities(
+    mut grid_coords_entities: Query<(&mut Transform, &GridCoords), Changed<GridCoords>>,
+) {
+    for (mut transform, grid_coords) in grid_coords_entities.iter_mut() {
+        transform.translation =
+            bevy_ecs_ldtk::utils::grid_coords_to_translation(*grid_coords, IVec2::splat(GRID_SIZE))
+                .extend(transform.translation.z);
+    }
 }

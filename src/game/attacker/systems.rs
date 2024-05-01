@@ -1,32 +1,74 @@
 use bevy::prelude::*;
+use bevy::utils::hashbrown::HashSet;
+use bevy_ecs_ldtk::GridCoords;
 
-use super::components::Attacker;
+use crate::game::map::AttackerArea;
+use crate::game::attacker::Direct;
 
-pub struct AttackerPlugin;
+use super::Tank;
 
-impl Plugin for AttackerPlugin {
-    fn build(&self, app: &mut App) {
-    }
-}
-
-// TODO: move enemy in all directions from function
-// TODO: define collisions with "Predefined Enemy Path"
-//  - Goal is to have eney follow the "Attacker" path from LDTK
-
-// TODO: load enemy asset at starting position
-pub fn spawn_attacker(
-    mut command: Commands,
-    asset_server: Res<AssetServer>,
-) {
-
-}
+const NORTH: GridCoords = GridCoords{ x:0, y:1 };
+const EAST: GridCoords = GridCoords{ x:1, y:0 };
+const SOUTH: GridCoords = GridCoords{ x:0, y:-1 };
+const WEST: GridCoords = GridCoords{ x:-1, y:0 };
 
 pub fn move_attackers(
-    mut attacker_query: Query<&mut Transform, With<Attacker>>,
+    mut attacker_query: Query<(&mut GridCoords, &mut Direct), (With<Tank>, Without<AttackerArea>)>,
+    attack_tiles: Query<&GridCoords, (With<AttackerArea>, Without<Tank>)>,
 ) {
-    for mut attacker in attacker_query.iter_mut() {
-        if attacker.translation.y >= -550.0 {
-            attacker.translation.y -= 1.0;
+    let tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
+    for (mut tank_grid_coords, mut tank_direct) in attacker_query.iter_mut() {
+        if tank_direct.grid_coords == SOUTH {
+            if tiles.contains(&(tank_direct.grid_coords + *tank_grid_coords)) {
+                *tank_grid_coords += tank_direct.grid_coords;
+            }
+            else if tiles.contains(&(*tank_grid_coords + EAST)) {
+                *tank_grid_coords += EAST;
+                tank_direct.grid_coords = EAST;
+            }
+            else if tiles.contains(&(*tank_grid_coords + WEST)) {
+                *tank_grid_coords += WEST;
+                tank_direct.grid_coords = WEST;
+            }
+        }
+        else if tank_direct.grid_coords == EAST {
+            if tiles.contains(&(tank_direct.grid_coords + *tank_grid_coords)) {
+                *tank_grid_coords += tank_direct.grid_coords;
+            }
+            else if tiles.contains(&(*tank_grid_coords + NORTH)) {
+                *tank_grid_coords += NORTH;
+                tank_direct.grid_coords = NORTH;
+            }
+            else if tiles.contains(&(*tank_grid_coords + SOUTH)) {
+                *tank_grid_coords += SOUTH;
+                tank_direct.grid_coords = SOUTH;
+            }
+        }
+        else if tank_direct.grid_coords == WEST {
+            if tiles.contains(&(tank_direct.grid_coords + *tank_grid_coords)) {
+                *tank_grid_coords += tank_direct.grid_coords;
+            }
+            else if tiles.contains(&(*tank_grid_coords + NORTH)) {
+                *tank_grid_coords += NORTH;
+                tank_direct.grid_coords = NORTH;
+            }
+            else if tiles.contains(&(*tank_grid_coords + SOUTH)) {
+                *tank_grid_coords += SOUTH;
+                tank_direct.grid_coords = SOUTH;
+            }
+        }
+        else if tank_direct.grid_coords == NORTH {
+            if tiles.contains(&(tank_direct.grid_coords + *tank_grid_coords)) {
+                *tank_grid_coords += tank_direct.grid_coords;
+            }
+            else if tiles.contains(&(*tank_grid_coords + EAST)) {
+                *tank_grid_coords += EAST;
+                tank_direct.grid_coords = EAST;
+            }
+            else if tiles.contains(&(*tank_grid_coords + WEST)) {
+                *tank_grid_coords += WEST;
+                tank_direct.grid_coords = WEST;
+            }
         }
     }
 }

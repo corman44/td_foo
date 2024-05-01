@@ -1,34 +1,12 @@
 pub mod system;
 pub mod components;
 
-use bevy::prelude::*;
-use bevy_ecs_ldtk::{app::LdtkIntCellAppExt, LdtkIntCell, LdtkPlugin, LevelSelection};
+use bevy::{prelude::*, utils::HashSet};
+use bevy_ecs_ldtk::prelude::*;
 
 use crate::AppState;
 
-use self::system::{ debug_cameras, map_setup, zoom_to_map};
-
-#[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Hash, Component, Reflect)]
-#[reflect(Component)]
-pub struct GridCoords {
-    pub x: i32,
-    pub y: i32,
-}
-
-impl From<IVec2> for GridCoords {
-    fn from(i_vec_2: IVec2) -> Self {
-        GridCoords {
-            x: i_vec_2.x,
-            y: i_vec_2.y,
-        }
-    }
-}
-
-impl From<GridCoords> for IVec2 {
-    fn from(grid_coords: GridCoords) -> Self {
-        IVec2::new(grid_coords.x, grid_coords.y)
-    }
-}
+use self::system::{debug_cameras, map_setup, translate_grid_coords_entities, zoom_to_map};
 
 pub struct MapPlugin;
 
@@ -39,11 +17,13 @@ impl Plugin for MapPlugin {
             .add_systems(Startup, map_setup)
             .insert_resource(LevelSelection::index(0))
             .add_systems(OnEnter(AppState::Game), (debug_cameras, zoom_to_map))
+            .add_systems(Update, translate_grid_coords_entities)
             .register_ldtk_int_cell::<DefenderAreaBundle>(1)
             .register_ldtk_int_cell::<AttackerAreaBundle>(2)
             .register_ldtk_int_cell::<UnusedAreaBundle>(3);
         }
 }
+
 
 #[derive(Default, Component)]
 pub struct DefenderArea;
@@ -67,4 +47,33 @@ pub struct UnusedArea;
 #[derive(Default, Bundle, LdtkIntCell)]
 pub struct UnusedAreaBundle {
     UnusedArea: UnusedArea,
+}
+
+#[derive(Default, Resource)]
+pub struct AttackTiles {
+    locations: HashSet<GridCoords>,
+}
+
+impl AttackTiles {
+    fn is_attack_tile(&self, grid_coords: &GridCoords) -> bool {
+        self.locations.contains(grid_coords)
+    }
+}
+
+#[derive(Default, Resource)]
+pub struct DefendTiles {
+    locations: HashSet<GridCoords>,
+}
+
+#[derive(Default, Resource)]
+pub struct UnusedTiles {
+    locations: HashSet<GridCoords>,
+}
+
+#[derive(Default, Component)]
+struct Tile;
+
+#[derive(Default, Bundle, LdtkIntCell)]
+struct TileBundle {
+    tile: Tile,
 }

@@ -16,5 +16,8 @@ inwatch:
 tree:
     cargo tree > tree.txt
 
+watch:
+    cargo watch -x "check"
+
 work:
     cargo watch -x "check" -s "just error"

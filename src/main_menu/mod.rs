@@ -4,7 +4,7 @@ pub mod system;
 
 use bevy::prelude::*;
 
-use crate::{game::{attacker::systems::move_attackers, GameState}, AppState};
+use crate::AppState;
 
 use self::system::{despawn_main_menu, spawn_main_menu};
 
@@ -22,7 +22,6 @@ impl Plugin for MainMenuPlugin {
         app
             .add_state::<MainMenuState>()
             .add_systems(OnEnter(AppState::MainMenu), spawn_main_menu)
-            .add_systems(OnExit(AppState::MainMenu), despawn_main_menu)
-            .add_systems(OnEnter(GameState::Running), move_attackers); // TODO: check if GameState is being set/updated?
+            .add_systems(OnExit(AppState::MainMenu), despawn_main_menu);
     }
 }

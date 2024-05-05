@@ -18,7 +18,7 @@ impl Plugin for GamePlugin {
         app
             .add_state::<GameState>()
             .add_plugins((AttackerPlugin, DefenderPlugin, MapPlugin, OverlayPlugin, PlayerPlugin))
-            .add_systems(Update, (pause_game, step_game_forward));
+            .add_systems(Update, pause_game);
     }
 }
 
@@ -28,19 +28,4 @@ pub enum GameState {
     #[default]
     Paused,
     StageEnd,
-}
-
-pub fn step_game_forward(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut next_sim_state: ResMut<NextState<GameState>>,
-    app_state: Res<State<AppState>>,
-) {
-    if *app_state.get() == AppState::Game {
-        if keyboard_input.just_pressed(KeyCode::N) {
-                println!("GameState::Paused");
-                next_sim_state.set(GameState::Paused);
-                eprintln!("GameState::Running");
-                next_sim_state.set(GameState::Running);
-        }
-    }
 }

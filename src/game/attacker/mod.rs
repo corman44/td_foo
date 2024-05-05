@@ -4,7 +4,8 @@ pub mod components;
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-use self::systems::move_attackers;
+
+use self::systems::{move_attackers, spawn_red_tank};
 use super::GameState;
 
 pub struct AttackerPlugin;
@@ -12,45 +13,17 @@ pub struct AttackerPlugin;
 impl Plugin for AttackerPlugin {
     fn build(&self, app: &mut App) {
         app
-            .register_ldtk_entity::<RedTankBundle>("RedTank")
-            .register_ldtk_entity::<BlueTankBundle>("BlueTank")
-            .add_systems(OnEnter(GameState::Running), move_attackers);
+            .add_systems(Update, (spawn_red_tank, move_attackers).run_if(in_state(GameState::Running)));
     }
 }
 
 #[derive(Default, Component)]
 pub struct Tank;
 
-
-#[derive(Default, Component)]
-pub struct Stationary;
-#[derive(Default, Bundle, LdtkEntity)]
-struct RedTankBundle {
+#[derive(Bundle, Default, LdtkEntity)]
+pub struct RedTankAttacker {
     tank: Tank,
-    #[sprite_sheet_bundle]
-    sprite_bundle: SpriteSheetBundle,
-    #[grid_coords]
-    grid_coords: GridCoords,
-    direction: Direct,
-}
-
-#[derive(Default, Bundle, LdtkEntity)]
-struct StationaryTankBundle {
-    tank: Tank,
-    attribute: Stationary,
-    #[sprite_sheet_bundle]
-    sprite_bundle: SpriteSheetBundle,
-    #[grid_coords]
-    grid_coords: GridCoords,
-    direction: Direct,
-}
-
-#[derive(Default, Bundle, LdtkEntity)]
-struct BlueTankBundle {
-    tank: Tank,
-    #[sprite_sheet_bundle]
-    sprite_bundle: SpriteSheetBundle,
-    #[grid_coords]
+    sprite_bundle: SpriteBundle,
     grid_coords: GridCoords,
     direction: Direct,
 }

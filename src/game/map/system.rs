@@ -48,7 +48,7 @@ pub fn attack_locations(
     attack_tiles: Query<&GridCoords, With<AttackerArea>>
 ) {
     let tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
-    // eprintln!("Attack Tiles: {:?}", tiles);
+    eprintln!("Attack Tiles: {:?}", tiles);
 }
 
 const GRID_SIZE: i32 = 64;

@@ -21,9 +21,23 @@ impl Plugin for AttackerPlugin {
 #[derive(Default, Component)]
 pub struct Tank;
 
+
+#[derive(Default, Component)]
+pub struct Stationary;
 #[derive(Default, Bundle, LdtkEntity)]
 struct RedTankBundle {
     tank: Tank,
+    #[sprite_sheet_bundle]
+    sprite_bundle: SpriteSheetBundle,
+    #[grid_coords]
+    grid_coords: GridCoords,
+    direction: Direct,
+}
+
+#[derive(Default, Bundle, LdtkEntity)]
+struct StationaryTankBundle {
+    tank: Tank,
+    attribute: Stationary,
     #[sprite_sheet_bundle]
     sprite_bundle: SpriteSheetBundle,
     #[grid_coords]

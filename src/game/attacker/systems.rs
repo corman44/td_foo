@@ -1,11 +1,11 @@
 use bevy::prelude::*;
 use bevy::utils::hashbrown::HashSet;
-use bevy_ecs_ldtk::GridCoords;
+use bevy_ecs_ldtk::prelude::*;
 
 use crate::game::map::AttackerArea;
 use crate::game::attacker::Direct;
 
-use super::Tank;
+use super::{BlueTankBundle, RedTankBundle, Stationary, Tank};
 
 const NORTH: GridCoords = GridCoords{ x:0, y:1 };
 const EAST: GridCoords = GridCoords{ x:1, y:0 };
@@ -13,7 +13,7 @@ const SOUTH: GridCoords = GridCoords{ x:0, y:-1 };
 const WEST: GridCoords = GridCoords{ x:-1, y:0 };
 
 pub fn move_attackers(
-    mut attacker_query: Query<(&mut GridCoords, &mut Direct), (With<Tank>, Without<AttackerArea>)>,
+    mut attacker_query: Query<(&mut GridCoords, &mut Direct), (With<Tank>, Without<AttackerArea>, Without<Stationary>)>,
     attack_tiles: Query<&GridCoords, (With<AttackerArea>, Without<Tank>)>,
 ) {
     let tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
@@ -72,3 +72,4 @@ pub fn move_attackers(
         }
     }
 }
+

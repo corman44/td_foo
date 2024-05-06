@@ -1,12 +1,12 @@
 mod game;
-mod main_menu;
+mod menus;
 mod debugging;
 
 use bevy::{app::AppExit, prelude::*, window::{PrimaryWindow, WindowResolution}};
 use bevy_kira_audio::prelude::*;
 use debugging::DebuggingPlugin;
 use game::{GamePlugin, GameState};
-use main_menu::MainMenuPlugin;
+use menus::MenusPlugin;
 
 pub struct AppPlugin;
 
@@ -44,8 +44,8 @@ impl Plugin for AppPlugin {
                     }),
                 AudioPlugin,
                 GamePlugin,
-                MainMenuPlugin,
-                DebuggingPlugin))
+                DebuggingPlugin,
+                MenusPlugin))
             .add_systems(Startup, spawn_camera)
             .add_systems(Update, (
                 handle_game_over,

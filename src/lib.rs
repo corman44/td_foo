@@ -4,7 +4,7 @@ mod debugging;
 
 use bevy::{app::AppExit, prelude::*, window::{PrimaryWindow, WindowResolution}};
 use bevy_kira_audio::prelude::*;
-use debugging::DebuggingPlugin;
+
 use game::{GamePlugin, GameState};
 use menus::MenusPlugin;
 
@@ -113,7 +113,7 @@ pub fn transition_to_game_state(
     keyboard_input: Res<Input<KeyCode>>,
     app_state: Res<State<AppState>>,
     mut next_app_state: ResMut<NextState<AppState>>,
-    mut next_sim_state: ResMut<NextState<GameState>>,
+    _next_sim_state: ResMut<NextState<GameState>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::G) {
         if app_state.get() != &AppState::Game {

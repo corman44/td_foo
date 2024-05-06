@@ -15,7 +15,7 @@ pub fn find_mouse_position_on_click(
 
 pub fn track_click_and_drag(
     mut mouse_button_input_events: EventReader<MouseButtonInput>,
-    mut motion_evr: EventReader<MouseMotion>,
+    _motion_evr: EventReader<MouseMotion>,
     q_windows: Query<&Window, With<PrimaryWindow>>,
 ) {
     let mut is_mouse_down: bool = false;

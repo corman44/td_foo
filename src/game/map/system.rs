@@ -24,7 +24,7 @@ pub fn debug_cameras(
 }
 
 pub fn zoom_to_map(
-    mut commands: Commands,
+    _commands: Commands,
     mut camera_query: Query<(&mut OrthographicProjection, & mut Transform), With<MyCameraMarker>>,
 ) {
     let (mut camera, mut trans) = camera_query.single_mut();
@@ -38,7 +38,7 @@ pub fn map_setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>
 ) {
-    let map = commands.spawn(LdtkWorldBundle {
+    let _map = commands.spawn(LdtkWorldBundle {
         ldtk_handle: asset_server.load("ldtk_map/td_foo_map1.ldtk").into(),
         ..Default::default()
     });
@@ -47,7 +47,7 @@ pub fn map_setup(
 pub fn attack_locations(
     attack_tiles: Query<&GridCoords, With<AttackerArea>>
 ) {
-    let tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
+    let _tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
     // info!("Attack Tiles: {:?}", tiles);
 }
 

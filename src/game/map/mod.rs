@@ -6,7 +6,7 @@ use bevy_ecs_ldtk::prelude::*;
 
 use crate::AppState;
 
-use self::system::{debug_cameras, map_setup, translate_grid_coords_entities, zoom_to_map};
+use self::system::{debug_cameras, map_setup, translate_grid_coords_entities};
 
 pub struct MapPlugin;
 
@@ -16,7 +16,7 @@ impl Plugin for MapPlugin {
             .add_plugins(LdtkPlugin)
             .add_systems(Startup, map_setup)
             .insert_resource(LevelSelection::index(0))
-            .add_systems(OnEnter(AppState::Game), (debug_cameras, /* zoom_to_map */))
+            .add_systems(OnEnter(AppState::Game), debug_cameras)
             .add_systems(Update, translate_grid_coords_entities)
             .register_ldtk_int_cell::<DefenderAreaBundle>(1)
             .register_ldtk_int_cell::<AttackerAreaBundle>(2)

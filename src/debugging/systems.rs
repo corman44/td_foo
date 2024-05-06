@@ -1,4 +1,4 @@
-use bevy::{prelude::*, window::Cursor};
+use bevy::prelude::*;
 
 pub fn mouse_button_input(
     buttons: Res<Input<MouseButton>>,

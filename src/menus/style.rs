@@ -52,6 +52,19 @@ pub const TITLE_STYLE: Style = {
     style
 };
 
+pub const PAUSE_MENU_STYLE: Style = {
+    let mut style = Style::DEFAULT;
+    style.flex_direction = FlexDirection::Column;
+    style.justify_content = JustifyContent::Center;
+    style.align_items = AlignItems::Center;
+    style.border = UiRect::all(MARGIN);
+    style.width = Val::Percent(100.0);
+    style.height = Val::Percent(100.0);
+    style.row_gap = Val::Px(50.0);
+    style.column_gap = Val::Px(50.0);
+    style
+};
+
 pub fn get_title_text_style(
     asset_server: &Res<AssetServer>,
 ) -> TextStyle {
@@ -60,6 +73,16 @@ pub fn get_title_text_style(
         font_size: 64.0,
         color: Color::WHITE,
     }
+}
+
+pub fn get_pause_text_style(
+    asset_server: &Res<AssetServer>,
+) -> TextStyle {
+    TextStyle { 
+        font: asset_server.load("fonts/Kenney Future.ttf"),
+        font_size: 64.0,
+        color: Color::WHITE,
+     }
 }
 
 pub fn get_button_text_style(

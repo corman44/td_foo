@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use super::{ component::{MainMenu, MenuButtonAction}, style::{get_button_text_style, get_title_text_style, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_STYLE, TITLE_STYLE}};
+use crate::menus::style::{get_button_text_style, get_title_text_style, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_STYLE, TITLE_STYLE};
+
+use super::components::{MainMenu, MenuButtonAction};
+
 
 pub fn spawn_main_menu(
     mut commands: Commands,

@@ -49,6 +49,7 @@ pub fn attack_locations(
 ) {
     let _tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
     // info!("Attack Tiles: {:?}", tiles);
+
 }
 
 const GRID_SIZE: i32 = 64;

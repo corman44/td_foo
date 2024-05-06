@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 use td_foo::AppPlugin;
 
-// TODO: add mouse events/mouse tracker
+// TODO: smoothly move attackers
+// TODO: spawn X Attackers with time delays
 
 /* --- Developer Info ---
 

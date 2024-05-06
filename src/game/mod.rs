@@ -4,6 +4,7 @@ pub mod map;
 pub mod overlay;
 pub mod player;
 pub mod systems;
+pub mod mouse;
 
 use bevy::prelude::*;
 
@@ -13,6 +14,7 @@ use self::{
     map::MapPlugin,
     overlay::systems::OverlayPlugin,
     player::systems::PlayerPlugin,
+    mouse::MousePlugin,
     systems::pause_game
 };
 
@@ -22,7 +24,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app
             .add_state::<GameState>()
-            .add_plugins((AttackerPlugin, DefenderPlugin, MapPlugin, OverlayPlugin, PlayerPlugin))
+            .add_plugins((AttackerPlugin, DefenderPlugin, MapPlugin, OverlayPlugin, PlayerPlugin, MousePlugin))
             .add_systems(Update, pause_game);
     }
 }

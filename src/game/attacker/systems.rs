@@ -104,6 +104,6 @@ pub fn spawn_red_tank(
             direction: Direct { grid_coords: SOUTH },
             ..default()
         }).id();
-        eprintln!("RedTankAttacker spawned: id={}",id.index());
+        info!("RedTankAttacker spawned: id={}",id.index());
     }
 }

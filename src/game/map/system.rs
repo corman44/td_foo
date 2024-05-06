@@ -11,20 +11,20 @@ pub fn debug_cameras(
     for camera in &q {
         match &camera.target {
             RenderTarget::Window(wid) => {
-                eprintln!("Camera redners to window with id: {:?}", wid);
+                info!("Camera renders to window with id: {:?}", wid);
             }
             RenderTarget::Image(handle) => {
-                eprintln!("Camera renders to image asset with id: {:?}", handle);
+                info!("Camera renders to image asset with id: {:?}", handle);
             },
             RenderTarget::TextureView(_) => {
-                eprintln!("This is a special camera that outputs to something outside of Bevy.");
+                info!("This is a special camera that outputs to something outside of Bevy.");
             },
         }
     }
 }
 
 pub fn zoom_to_map(
-    mut commands: Commands,
+    _commands: Commands,
     mut camera_query: Query<(&mut OrthographicProjection, & mut Transform), With<MyCameraMarker>>,
 ) {
     let (mut camera, mut trans) = camera_query.single_mut();
@@ -38,7 +38,7 @@ pub fn map_setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>
 ) {
-    let map = commands.spawn(LdtkWorldBundle {
+    let _map = commands.spawn(LdtkWorldBundle {
         ldtk_handle: asset_server.load("ldtk_map/td_foo_map1.ldtk").into(),
         ..Default::default()
     });
@@ -47,8 +47,9 @@ pub fn map_setup(
 pub fn attack_locations(
     attack_tiles: Query<&GridCoords, With<AttackerArea>>
 ) {
-    let tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
-    eprintln!("Attack Tiles: {:?}", tiles);
+    let _tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
+    // info!("Attack Tiles: {:?}", tiles);
+
 }
 
 const GRID_SIZE: i32 = 64;

@@ -1,12 +1,11 @@
-pub mod component;
-pub mod style;
-pub mod system;
+pub mod components;
+pub mod systems;
 
 use bevy::prelude::*;
 
 use crate::AppState;
 
-use self::system::{despawn_main_menu, spawn_main_menu};
+use self::systems::{despawn_main_menu, spawn_main_menu};
 
 #[derive(States, Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum MainMenuState {

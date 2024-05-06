@@ -1,12 +1,12 @@
 mod game;
-mod main_menu;
+mod menus;
 mod debugging;
 
 use bevy::{app::AppExit, prelude::*, window::{PrimaryWindow, WindowResolution}};
 use bevy_kira_audio::prelude::*;
-use debugging::DebuggingPlugin;
+
 use game::{GamePlugin, GameState};
-use main_menu::MainMenuPlugin;
+use menus::MenusPlugin;
 
 pub struct AppPlugin;
 
@@ -44,8 +44,8 @@ impl Plugin for AppPlugin {
                     }),
                 AudioPlugin,
                 GamePlugin,
-                MainMenuPlugin,
-                DebuggingPlugin))
+                // DebuggingPlugin,
+                MenusPlugin))
             .add_systems(Startup, spawn_camera)
             .add_systems(Update, (
                 handle_game_over,
@@ -89,7 +89,7 @@ pub fn handle_game_over(
     mut next_app_state: ResMut<NextState<AppState>> 
 ) {
     for event in game_over_event_reader.read() {
-        println!("Final Score: {}", event.score.to_string());
+        info!("Final Score: {}", event.score.to_string());
         next_app_state.set(AppState::GameOver);
     }
 }
@@ -113,11 +113,11 @@ pub fn transition_to_game_state(
     keyboard_input: Res<Input<KeyCode>>,
     app_state: Res<State<AppState>>,
     mut next_app_state: ResMut<NextState<AppState>>,
-    mut next_sim_state: ResMut<NextState<GameState>>,
+    _next_sim_state: ResMut<NextState<GameState>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::G) {
         if app_state.get() != &AppState::Game {
-            println!("AppState: Game");
+            info!("AppState: Game");
             next_app_state.set(AppState::Game);
             // next_sim_state.set(GameState::Running);
         }
@@ -133,7 +133,7 @@ pub fn transition_to_main_menu_state(
 
     if keyboard_input.just_pressed(KeyCode::M) {
         if app_state.get() != &AppState::MainMenu {
-            println!("AppState: MainMenu");
+            info!("AppState: MainMenu");
             next_app_state.set(AppState::MainMenu);
             next_sim_state.set(GameState::Paused);
         }

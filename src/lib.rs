@@ -44,7 +44,7 @@ impl Plugin for AppPlugin {
                     }),
                 AudioPlugin,
                 GamePlugin,
-                DebuggingPlugin,
+                // DebuggingPlugin,
                 MenusPlugin))
             .add_systems(Startup, spawn_camera)
             .add_systems(Update, (
@@ -89,7 +89,7 @@ pub fn handle_game_over(
     mut next_app_state: ResMut<NextState<AppState>> 
 ) {
     for event in game_over_event_reader.read() {
-        println!("Final Score: {}", event.score.to_string());
+        info!("Final Score: {}", event.score.to_string());
         next_app_state.set(AppState::GameOver);
     }
 }
@@ -117,7 +117,7 @@ pub fn transition_to_game_state(
 ) {
     if keyboard_input.just_pressed(KeyCode::G) {
         if app_state.get() != &AppState::Game {
-            println!("AppState: Game");
+            info!("AppState: Game");
             next_app_state.set(AppState::Game);
             // next_sim_state.set(GameState::Running);
         }
@@ -133,7 +133,7 @@ pub fn transition_to_main_menu_state(
 
     if keyboard_input.just_pressed(KeyCode::M) {
         if app_state.get() != &AppState::MainMenu {
-            println!("AppState: MainMenu");
+            info!("AppState: MainMenu");
             next_app_state.set(AppState::MainMenu);
             next_sim_state.set(GameState::Paused);
         }

@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, f32::consts::PI};
 
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
@@ -19,24 +19,52 @@ const SPEED: f32 = 100.;
 
 pub fn move_attackers(
     mut attacker_query: Query<(&mut TankMovement, &mut Transform)>,
+    attacker_turns: Res<AttackerTurns>,
     time: Res<Time>,
 ) {
     let delta = time.delta_seconds();
 
     // TODO: check if new transform is past turning point, if so apply direciton until turn, then apply remaining in new direction
+    let mut temp_trans = Vec3::default();
     for (mut tank_movement, mut tank_transform) in attacker_query.iter_mut() {
+        let turn_index = tank_movement.turns_done as usize;
+        let next_max = attacker_turns.turn_locations.get(turn_index).unwrap();
         match tank_movement.direction {
             Direct::NORTH => {
-                tank_transform.translation.y += delta * SPEED ;
+                if tank_transform.translation.y + delta * SPEED > next_max.1 as f32 {
+                    tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
+                    tank_transform.translation.y = attacker_turns.turn_locations.get(turn_index).unwrap().1 as f32;
+                    tank_transform.rotate_z(-PI/2.);
+                } else {
+                    temp_trans.y += delta * SPEED;
+                }
             },
             Direct::SOUTH => {
-                tank_transform.translation.y -= delta * SPEED ;
+                if tank_transform.translation.y + delta * SPEED < next_max.1 as f32 {
+                    tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
+                    tank_transform.translation.y = attacker_turns.turn_locations.get(turn_index).unwrap().1 as f32;
+                    tank_transform.rotate_z(-PI/2.);
+                } else {
+                    temp_trans.y -= delta * SPEED;
+                }
             },
             Direct::EAST => {
-                tank_transform.translation.x += delta * SPEED ;
+                if tank_transform.translation.x + delta * SPEED > next_max.0 as f32 {
+                    tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
+                    tank_transform.translation.x = attacker_turns.turn_locations.get(turn_index).unwrap().0 as f32;
+                    tank_transform.rotate_z(-PI/2.);
+                } else {
+                    temp_trans.x += delta * SPEED;
+                }
             },
             Direct::WEST => {
-                tank_transform.translation.x -= delta * SPEED ;
+                if tank_transform.translation.x + delta * SPEED < next_max.0 as f32 {
+                    tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
+                    tank_transform.translation.x = attacker_turns.turn_locations.get(turn_index).unwrap().0 as f32;
+                    tank_transform.rotate_z(-PI/2.);
+                } else {
+                    temp_trans.x -= delta * SPEED;
+                }
             },
         }
     }
@@ -68,7 +96,7 @@ pub fn spawn_red_tank(
 
 pub fn init_attacker_turns(
     mut turns_res: ResMut<AttackerTurns>,
-    attack_tiles_query: Query<&GridCoords, With<AttackerArea>>,
+    attack_tiles_query: Query<&GridCoords, (With<AttackerArea>, Without<Tank>)>,
 ) {
     let attack_tiles_hs: HashSet<GridCoords> = attack_tiles_query.iter().copied().collect();
     let mut attacker_turns = AttackerTurns { turn_locations: vec![], ..default()};
@@ -77,71 +105,86 @@ pub fn init_attacker_turns(
     let mut curr_dir = Direct::SOUTH;
     let mut done: bool = false;
 
+    info!("attack_tiles: {:?}", attack_tiles_hs.clone());
     while(!done) {
         // if dir south and found south, update curr_pos and continue.
         // otherwise, turn found and need to push the turn info to attacker_turns
         match curr_dir {
             Direct::NORTH => {
+                info!("matched NORTH");
                 if attack_tiles_hs.contains(&(curr_pos + NORTH_GC)) {
                     curr_pos += NORTH_GC;
                 } else if attack_tiles_hs.contains(&(curr_pos + WEST_GC)) {
                     attacker_turns.direction.push(Direct::WEST);
+                    curr_dir = Direct::WEST;
                     turn_locations_gc.push(curr_pos);
                     curr_pos.turn_left();
                 } else if attack_tiles_hs.contains(&(curr_pos + EAST_GC)) {
                     attacker_turns.direction.push(Direct::EAST);
+                    curr_dir = Direct::EAST;
                     turn_locations_gc.push(curr_pos);
                     curr_pos.turn_right();
                 } else { done = true; }
             },
             Direct::SOUTH => {
+                info!("matched SOUTH");
                 if attack_tiles_hs.contains(&(curr_pos + SOUTH_GC)) {
                     curr_pos += SOUTH_GC;
                 } else if attack_tiles_hs.contains(&(curr_pos + WEST_GC)) {
                     attacker_turns.direction.push(Direct::WEST);
+                    curr_dir = Direct::WEST;
                     turn_locations_gc.push(curr_pos);
                     curr_pos.turn_right();
                 } else if attack_tiles_hs.contains(&(curr_pos + EAST_GC)) {
                     attacker_turns.direction.push(Direct::EAST);
+                    curr_dir = Direct::EAST;
                     turn_locations_gc.push(curr_pos);
                     curr_pos.turn_left();
                 } else { done = true; }
             },
             Direct::EAST => {
+                info!("matched EAST");
                 if attack_tiles_hs.contains(&(curr_pos + EAST_GC)) {
                     curr_pos += EAST_GC;
                 } else if attack_tiles_hs.contains(&(curr_pos + NORTH_GC)) {
                     attacker_turns.direction.push(Direct::NORTH);
+                    curr_dir = Direct::NORTH;
                     turn_locations_gc.push(curr_pos);
                     curr_pos.turn_left();
                 } else if attack_tiles_hs.contains(&(curr_pos + SOUTH_GC)) {
                     attacker_turns.direction.push(Direct::SOUTH);
+                    curr_dir = Direct::SOUTH;
                     turn_locations_gc.push(curr_pos);
                     curr_pos.turn_right();
                 } else { done = true; }
             },
             Direct::WEST => {
+                info!("matched WEST");
                 if attack_tiles_hs.contains(&(curr_pos + WEST_GC)) {
                     curr_pos += WEST_GC;
                 } else if attack_tiles_hs.contains(&(curr_pos + SOUTH_GC)) {
                     attacker_turns.direction.push(Direct::SOUTH);
+                    curr_dir = Direct::SOUTH;
                     turn_locations_gc.push(curr_pos);
                     curr_pos.turn_left();
                 } else if attack_tiles_hs.contains(&(curr_pos + NORTH_GC)) {
                     attacker_turns.direction.push(Direct::NORTH);
+                    curr_dir = Direct::NORTH;
                     turn_locations_gc.push(curr_pos);
                     curr_pos.turn_right();
                 } else { done = true; }
             },
         }
     }
+    info!("turn location number: {}", turn_locations_gc.len());
+    for gc in turn_locations_gc.iter() {
+        attacker_turns.turn_locations.push(gridcoords_to_xy(gc));
+    }
 
-    let _ = turn_locations_gc.iter().map(|gc| {
-        attacker_turns.turn_locations.push(gridcoords_to_xy(&gc))
-    });
-
-    turns_res.direction = attacker_turns.direction;
-    turns_res.turn_locations = attacker_turns.turn_locations;
+    turns_res.direction = attacker_turns.direction.clone();
+    turns_res.turn_locations = attacker_turns.turn_locations.clone();
+    info!("attacker turn locations: {:?}", attacker_turns.turn_locations);
+    info!("attacker turn directions: {:?}", attacker_turns.direction);
 }
 
 fn gridcoords_to_xy(gc: &GridCoords) -> (i32, i32) {

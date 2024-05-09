@@ -37,7 +37,7 @@ pub struct TankMovement {
     turns_done: i32,
 }
 
-#[derive(Resource, Default)]
+#[derive(Resource, Default, Clone, Debug)]
 pub struct AttackerTurns {
     turn_locations: Vec<(i32,i32)>,
     direction: Vec<Direct>,
@@ -46,7 +46,7 @@ pub struct AttackerTurns {
 // #[derive(Component, Default)]
 // pub struct Direction(Direct);
 
-#[derive(Default, Component)]
+#[derive(Default, Component, Clone, Debug)]
 pub enum Direct {
     NORTH,
     #[default]

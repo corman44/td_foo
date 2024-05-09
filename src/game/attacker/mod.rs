@@ -24,17 +24,16 @@ pub struct Tank;
 pub struct RedTankAttacker {
     tank: Tank,
     sprite_bundle: SpriteBundle,
-    grid_coords: GridCoords,
     direction: Direct,
 }
 
 #[derive(Component, Copy, Clone, Eq, PartialEq, Debug, Hash, Reflect)]
 pub struct Direct {
-    grid_coords: GridCoords,
+    vec: IVec2,
 }
 
 impl Default for Direct {
     fn default() -> Self {
-        Self { grid_coords: GridCoords::new(0,-1) }
+        Self { vec: IVec2 { x: 0, y: -1 } }
     }
 }

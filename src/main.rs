@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use td_foo::AppPlugin;
 
-// TODO: smoothly move attackers
-// TODO: spawn X Attackers with time delays
+// TODO: spawn Attackers with time delays
+// TODO: determine when attackers change direction
 
 /* --- Developer Info ---
 

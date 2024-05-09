@@ -9,80 +9,20 @@ use crate::game::attacker::Direct;
 
 use super::{RedTankAttacker, Tank};
 
-const NORTH: GridCoords = GridCoords{ x:0, y:1 };
-const EAST: GridCoords = GridCoords{ x:1, y:0 };
-const SOUTH: GridCoords = GridCoords{ x:0, y:-1 };
-const WEST: GridCoords = GridCoords{ x:-1, y:0 };
+const NORTH: IVec2 = IVec2{ x:0, y:1 };
+const EAST: IVec2 = IVec2{ x:1, y:0 };
+const SOUTH: IVec2 = IVec2{ x:0, y:-1 };
+const WEST: IVec2 = IVec2{ x:-1, y:0 };
+const SPEED: f32 = 100.;
 
 pub fn move_attackers(
-    mut attacker_query: Query<(&mut GridCoords, &mut Direct, &mut Transform), (With<Tank>, Without<AttackerArea>)>,
-    attack_tiles: Query<&GridCoords, (With<AttackerArea>, Without<Tank>)>,
-    keyboard: Res<Input<KeyCode>>,
+    mut attacker_query: Query<(&mut Direct, &mut Transform), (With<Tank>, Without<AttackerArea>)>,
+    time: Res<Time>,
 ) {
-    if keyboard.just_pressed(KeyCode::N) {
-        let tiles: HashSet<GridCoords> = attack_tiles.iter().copied().collect();
-        for (mut tank_grid_coords, mut tank_direct, mut tank_transform) in attacker_query.iter_mut() {
-            if tank_direct.grid_coords == SOUTH {
-                if tiles.contains(&(tank_direct.grid_coords + *tank_grid_coords)) {
-                    *tank_grid_coords += tank_direct.grid_coords;
-                }
-                else if tiles.contains(&(*tank_grid_coords + EAST)) {
-                    *tank_grid_coords += EAST;
-                    tank_direct.grid_coords = EAST;
-                    tank_transform.rotate_z(-PI/2.);
-                }
-                else if tiles.contains(&(*tank_grid_coords + WEST)) {
-                    *tank_grid_coords += WEST;
-                    tank_direct.grid_coords = WEST;
-                    tank_transform.rotate_z(PI/2.);
-                }
-            }
-            else if tank_direct.grid_coords == EAST {
-                if tiles.contains(&(tank_direct.grid_coords + *tank_grid_coords)) {
-                    *tank_grid_coords += tank_direct.grid_coords;
-                }
-                else if tiles.contains(&(*tank_grid_coords + NORTH)) {
-                    *tank_grid_coords += NORTH;
-                    tank_direct.grid_coords = NORTH;
-                    tank_transform.rotate_z(PI/2.);
-                }
-                else if tiles.contains(&(*tank_grid_coords + SOUTH)) {
-                    *tank_grid_coords += SOUTH;
-                    tank_direct.grid_coords = SOUTH;
-                    tank_transform.rotate_z(-PI/2.);
-                }
-            }
-            else if tank_direct.grid_coords == WEST {
-                if tiles.contains(&(tank_direct.grid_coords + *tank_grid_coords)) {
-                    *tank_grid_coords += tank_direct.grid_coords;
-                }
-                else if tiles.contains(&(*tank_grid_coords + NORTH)) {
-                    *tank_grid_coords += NORTH;
-                    tank_direct.grid_coords = NORTH;
-                    tank_transform.rotate_z(-PI/2.);
-                }
-                else if tiles.contains(&(*tank_grid_coords + SOUTH)) {
-                    *tank_grid_coords += SOUTH;
-                    tank_direct.grid_coords = SOUTH;
-                    tank_transform.rotate_z(PI/2.);
-                }
-            }
-            else if tank_direct.grid_coords == NORTH {
-                if tiles.contains(&(tank_direct.grid_coords + *tank_grid_coords)) {
-                    *tank_grid_coords += tank_direct.grid_coords;
-                }
-                else if tiles.contains(&(*tank_grid_coords + EAST)) {
-                    *tank_grid_coords += EAST;
-                    tank_direct.grid_coords = EAST;
-                    tank_transform.rotate_z(-PI/2.);
-                }
-                else if tiles.contains(&(*tank_grid_coords + WEST)) {
-                    *tank_grid_coords += WEST;
-                    tank_direct.grid_coords = WEST;
-                    tank_transform.rotate_z(PI/2.);
-                }
-            }
-        }
+    let delta = time.delta_seconds();
+    for (mut tank_direct, mut tank_transform) in attacker_query.iter_mut() {
+        tank_transform.translation.x += tank_direct.vec.x as f32 * delta * SPEED ;
+        tank_transform.translation.y += tank_direct.vec.y as f32 * delta * SPEED ;
     }
 }
 
@@ -97,11 +37,10 @@ pub fn spawn_red_tank(
         let id = commands.spawn(RedTankAttacker {
             sprite_bundle: SpriteBundle {
                 texture: texture,
-                transform: Transform { translation: Vec3::new(0., 0., 6.), ..default() },
+                transform: Transform { translation: Vec3::new(480., 992., 6.), ..default() },
                 ..default()
             },
-            grid_coords: GridCoords { x:7, y:15 }, // starting position for basic map
-            direction: Direct { grid_coords: SOUTH },
+            direction: Direct { vec: IVec2 { x: 0, y: -1 }  },
             ..default()
         }).id();
         info!("RedTankAttacker spawned: id={}",id.index());

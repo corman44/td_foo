@@ -7,7 +7,7 @@ use bevy_ecs_ldtk::prelude::*;
 use crate::AppState;
 
 
-use self::system::{debug_cameras, map_setup, translate_grid_coords_entities};
+use self::system::{debug_cameras, map_setup};
 
 
 pub struct MapPlugin;
@@ -19,7 +19,6 @@ impl Plugin for MapPlugin {
             .add_systems(Startup, map_setup)
             .insert_resource(LevelSelection::index(0))
             .add_systems(OnEnter(AppState::Game), debug_cameras)
-            .add_systems(Update, translate_grid_coords_entities)
             .register_ldtk_int_cell::<DefenderAreaBundle>(1)
             .register_ldtk_int_cell::<AttackerAreaBundle>(2)
             .register_ldtk_int_cell::<UnusedAreaBundle>(3);
@@ -54,12 +53,6 @@ pub struct UnusedAreaBundle {
 #[derive(Default, Resource)]
 pub struct AttackTiles {
     locations: HashSet<GridCoords>,
-}
-
-impl AttackTiles {
-    fn is_attack_tile(&self, grid_coords: &GridCoords) -> bool {
-        self.locations.contains(grid_coords)
-    }
 }
 
 #[derive(Default, Resource)]

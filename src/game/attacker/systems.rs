@@ -23,7 +23,7 @@ pub fn move_attackers(
     // TODO: check if new transform is past turning point, if so apply direciton until turn, then apply remaining in new direction
     for (mut tank_movement, mut tank_transform) in attacker_query.iter_mut() {
         let turn_index = tank_movement.turns_done as usize;
-        let next_max = attacker_turns.turn_locations.get(turn_index).unwrap();
+        let next_max = attacker_turns.turn_locations.get(turn_index).expect(format!("No next_max found at inded: {}", turn_index).as_str());
         info!("Next max: {:?}", next_max);
         match tank_movement.direction {
             Direct::NORTH => {

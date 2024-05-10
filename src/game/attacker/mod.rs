@@ -7,6 +7,8 @@ use std::default;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
+use crate::AppState;
+
 use self::systems::{init_attacker_turns, move_attackers, spawn_red_tank};
 use super::GameState;
 
@@ -16,8 +18,8 @@ impl Plugin for AttackerPlugin {
     fn build(&self, app: &mut App) {
         app
             .init_resource::<AttackerTurns>()
-            .add_systems(Update, (spawn_red_tank, move_attackers).run_if(in_state(GameState::Running)))
-            .add_systems(PostStartup, init_attacker_turns);
+            .add_systems(OnEnter(AppState::Game), init_attacker_turns) // TODO: only run init_attacker_turns once (but after map is setup)
+            .add_systems(Update, (spawn_red_tank, move_attackers).run_if(in_state(GameState::Running)));
     }
 }
 

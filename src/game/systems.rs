@@ -11,11 +11,11 @@ pub fn pause_game(
     app_state: Res<State<AppState>>,
     input: Res<Input<KeyCode>>,
 ) {
-    if *app_state.get() == AppState::Game {
-        if input.just_pressed(KeyCode::Escape) {
-            if *game_state.get() == GameState::Running {
-                next_game_state.set(GameState::Paused);
-            }
+    if input.just_pressed(KeyCode::Escape) {
+        if *game_state.get() == GameState::Running {
+            next_game_state.set(GameState::Paused);
+        } else if *game_state.get() == GameState::Paused {
+            next_game_state.set(GameState::Running);
         }
     }
 }

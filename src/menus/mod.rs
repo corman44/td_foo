@@ -5,6 +5,7 @@ use self::{main_menu::MainMenuPlugin, pause_menu::PauseMenuPlugin};
 pub mod style;
 pub mod main_menu;
 pub mod pause_menu;
+pub mod interactions;
 
 pub struct MenusPlugin;
 

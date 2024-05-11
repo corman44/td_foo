@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
-use crate::menus::style::{get_button_text_style, get_pause_text_style, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_STYLE, PAUSE_MENU_STYLE};
+use crate::menus::{main_menu::components::{QuitButton, SettingsButton}, style::{get_button_text_style, get_pause_text_style, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_STYLE, PAUSE_MENU_STYLE}};
 
-use super::components::{PauseMenu, PauseMenuButtonAction};
+use super::components::PauseMenu;
 
 pub fn spawn_pause_menu(
     mut commands: Commands,
@@ -36,33 +36,50 @@ pub fn spawn_pause_menu(
                 ..default()
             })
             .with_children(|parent| {
-                for (action,text) in [
-                    (PauseMenuButtonAction::Settings, "Settings"),
-                    (PauseMenuButtonAction::Quit, "Quit")
-                ] {
-                    parent.spawn((
-                        ButtonBundle {
-                            style: NORMAL_BUTTON_STYLE,
-                            background_color: NORMAL_BUTTON_COLOR.into(),
-                            ..default()
-                        },
-                        action,
-                    )).with_children(|parent| {
-                        parent.spawn(
-                            TextBundle {
-                                text: Text {
-                                    sections: vec![
-                                        TextSection::new(
-                                            text,
-                                            get_button_text_style(&asset_server),
-                                        )
-                                    ],
-                                    ..default()
-                                },
+                parent.spawn((
+                    ButtonBundle {
+                        style: NORMAL_BUTTON_STYLE,
+                        background_color: NORMAL_BUTTON_COLOR.into(),
+                        ..default()
+                    },
+                    SettingsButton,
+                )).with_children(|parent| {
+                    parent.spawn(
+                        TextBundle {
+                            text: Text {
+                                sections: vec![
+                                    TextSection::new(
+                                        "Settings",
+                                        get_button_text_style(&asset_server),
+                                    )
+                                ],
                                 ..default()
-                            });
-                    });
-                }
+                            },
+                            ..default()
+                        });
+                });
+                parent.spawn((
+                    ButtonBundle {
+                        style: NORMAL_BUTTON_STYLE,
+                        background_color: NORMAL_BUTTON_COLOR.into(),
+                        ..default()
+                    },
+                    QuitButton,
+                )).with_children(|parent| {
+                    parent.spawn(
+                        TextBundle {
+                            text: Text {
+                                sections: vec![
+                                    TextSection::new(
+                                        "Quit",
+                                        get_button_text_style(&asset_server),
+                                    )
+                                ],
+                                ..default()
+                            },
+                            ..default()
+                        });
+                });
             });
 
     });

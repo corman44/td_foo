@@ -2,15 +2,11 @@ use bevy::prelude::*;
 use td_foo::AppPlugin;
 
 // TODO: spawn Attackers with time delays
-
+// TODO: fix broken Game/App State and pause menu spawning...
 /* --- Developer Info ---
 
     * Controls
-        M -> Main Menu
-        G -> Game
-        P -> toggle Game Paused and Running
         S -> Spawn Tank at starting pos
-        N -> Move Tank forward
  */
 
 fn main() {

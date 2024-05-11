@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::menus::style::{get_button_text_style, get_title_text_style, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR, NORMAL_BUTTON_STYLE, TITLE_STYLE};
 
-use super::components::{MainMenu, MenuButtonAction};
+use super::components::{AttackButton, DefendButton, MainMenu, MultiplayerButton, QuitButton, SettingsButton};
 
 
 pub fn spawn_main_menu(
@@ -79,35 +79,73 @@ pub fn build_main_menu(
                     ..default()
                 })
                 .with_children(|parent| {
-                    for (action, text) in [
-                        (MenuButtonAction::Defend, "Defend"),
-                        (MenuButtonAction::Attack, "Attack"),
-                        (MenuButtonAction::Multiplayer, "Multi")] {
-                            parent.spawn((
-                                ButtonBundle {
-                                    style: NORMAL_BUTTON_STYLE,
-                                    background_color: NORMAL_BUTTON_COLOR.into(),
-                                    // border_color: Color::RED.into(),
+                    parent.spawn((
+                        ButtonBundle {
+                            style: NORMAL_BUTTON_STYLE,
+                            background_color: NORMAL_BUTTON_COLOR.into(),
+                            ..default()
+                        },
+                        DefendButton,
+                    )).with_children(|parent| {
+                        parent.spawn(
+                            TextBundle {
+                                text: Text {
+                                    sections: vec![
+                                        TextSection::new(
+                                            "Defend",
+                                            get_button_text_style(&asset_server),
+                                        )
+                                    ],
                                     ..default()
                                 },
-                                action,
-                            )).with_children(|parent| {
-                                parent.spawn(
-                                    TextBundle {
-                                        text: Text {
-                                            sections: vec![
-                                                TextSection::new(
-                                                    text,
-                                                    get_button_text_style(&asset_server),
-                                                )
-                                            ],
-                                            ..default()
-                                        },
-                                        ..default()
-                                    });
+                                ..default()
                             });
-                        }
                     });
+                    parent.spawn((
+                        ButtonBundle {
+                            style: NORMAL_BUTTON_STYLE,
+                            background_color: NORMAL_BUTTON_COLOR.into(),
+                            ..default()
+                        },
+                        AttackButton,
+                    )).with_children(|parent| {
+                        parent.spawn(
+                            TextBundle {
+                                text: Text {
+                                    sections: vec![
+                                        TextSection::new(
+                                            "Attack",
+                                            get_button_text_style(&asset_server),
+                                        )
+                                    ],
+                                    ..default()
+                                },
+                                ..default()
+                            });
+                    });
+                    parent.spawn((
+                        ButtonBundle {
+                            style: NORMAL_BUTTON_STYLE,
+                            background_color: NORMAL_BUTTON_COLOR.into(),
+                            ..default()
+                        },
+                        MultiplayerButton,
+                    )).with_children(|parent| {
+                        parent.spawn(
+                            TextBundle {
+                                text: Text {
+                                    sections: vec![
+                                        TextSection::new(
+                                            "Multi",
+                                            get_button_text_style(&asset_server),
+                                        )
+                                    ],
+                                    ..default()
+                                },
+                                ..default()
+                            });
+                    });
+            });
 
             // --- Second Button Row Section ---
             parent.spawn(
@@ -117,33 +155,52 @@ pub fn build_main_menu(
                     ..default()
                 })
                 .with_children(|parent| {
-                    for (action, text) in [
-                        (MenuButtonAction::Settings, "Settings"),
-                        (MenuButtonAction::Quit, "Quit")] {
-                            parent.spawn((
-                                ButtonBundle {
-                                    style: NORMAL_BUTTON_STYLE,
-                                    // border_color: Color::RED.into(),
-                                    background_color: NORMAL_BUTTON_COLOR.into(),
+                    parent.spawn((
+                        ButtonBundle {
+                            style: NORMAL_BUTTON_STYLE,
+                            // border_color: Color::RED.into(),
+                            background_color: NORMAL_BUTTON_COLOR.into(),
+                            ..default()
+                        },
+                        SettingsButton ,
+                    )).with_children(|parent| {
+                        parent.spawn(
+                            TextBundle {
+                                text: Text {
+                                    sections: vec![
+                                        TextSection::new(
+                                            "Settings",
+                                            get_button_text_style(&asset_server),
+                                        )
+                                    ],
                                     ..default()
                                 },
-                                action ,
-                            )).with_children(|parent| {
-                                parent.spawn(
-                                    TextBundle {
-                                        text: Text {
-                                            sections: vec![
-                                                TextSection::new(
-                                                    text,
-                                                    get_button_text_style(&asset_server),
-                                                )
-                                            ],
-                                            ..default()
-                                        },
-                                        ..default()
-                                    });
+                                ..default()
                             });
-                        }
+                    });
+                    parent.spawn((
+                        ButtonBundle {
+                            style: NORMAL_BUTTON_STYLE,
+                            // border_color: Color::RED.into(),
+                            background_color: NORMAL_BUTTON_COLOR.into(),
+                            ..default()
+                        },
+                        QuitButton,
+                    )).with_children(|parent| {
+                        parent.spawn(
+                            TextBundle {
+                                text: Text {
+                                    sections: vec![
+                                        TextSection::new(
+                                            "Quit",
+                                            get_button_text_style(&asset_server),
+                                        )
+                                    ],
+                                    ..default()
+                                },
+                                ..default()
+                            });
+                    });
                 });
             })
         .id();

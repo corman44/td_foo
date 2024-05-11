@@ -2,14 +2,12 @@
 pub mod systems;
 pub mod components;
 
-use std::default;
-
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
 use crate::AppState;
 
-use self::systems::{init_attacker_turns, move_attackers, spawn_red_tank};
+use self::systems::{init_attacker_turns, move_attackers, spawn_red_tank, turn_attackers};
 use super::GameState;
 
 pub struct AttackerPlugin;
@@ -19,7 +17,7 @@ impl Plugin for AttackerPlugin {
         app
             .init_resource::<AttackerTurns>()
             .add_systems(OnEnter(AppState::Game), init_attacker_turns) // TODO: only run init_attacker_turns once (but after map is setup)
-            .add_systems(Update, (spawn_red_tank, move_attackers).run_if(in_state(GameState::Running)));
+            .add_systems(Update, (spawn_red_tank, move_attackers, turn_attackers).run_if(in_state(GameState::Running)));
     }
 }
 
@@ -44,9 +42,6 @@ pub struct AttackerTurns {
     turn_locations: Vec<(i32,i32)>,
     direction: Vec<Direct>,
 }
-
-// #[derive(Component, Default)]
-// pub struct Direction(Direct);
 
 #[derive(Default, Component, Clone, Debug)]
 pub enum Direct {

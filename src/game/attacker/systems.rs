@@ -23,53 +23,65 @@ pub fn move_attackers(
     // TODO: check if new transform is past turning point, if so apply direciton until turn, then apply remaining in new direction
     for (mut tank_movement, mut tank_transform) in attacker_query.iter_mut() {
         let turn_index = tank_movement.turns_done as usize;
-        let next_max = attacker_turns.turn_locations.get(turn_index).expect(format!("No next_max found at inded: {}", turn_index).as_str());
-        info!("Next max: {:?}", next_max);
         match tank_movement.direction {
             Direct::NORTH => {
-                info!("tank NORTH");
-                if tank_transform.translation.y + delta * SPEED > next_max.1 as f32 {
-                    info!("Turn found at: {:?}", tank_transform.translation);
-                    tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
-                    tank_transform.translation.y = attacker_turns.turn_locations.get(turn_index).unwrap().1 as f32;
-                    tank_transform.rotate_z(-PI/2.);
-                    tank_movement.turns_done += 1;
+                // info!("tank NORTH");
+                if let Some(next_max) = attacker_turns.turn_locations.get(turn_index) {
+                    if tank_transform.translation.y + delta * SPEED > next_max.1 as f32 {
+                        // info!("Turn found at: {:?}", tank_transform.translation);
+                        tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
+                        tank_transform.translation.y = attacker_turns.turn_locations.get(turn_index).unwrap().1 as f32;
+                        tank_movement.turns_done += 1;
+                    } else {
+                        tank_transform.translation.y += delta * SPEED;
+                    }
                 } else {
                     tank_transform.translation.y += delta * SPEED;
                 }
             },
             Direct::SOUTH => {
-                info!("tank SOUTH");
-                if tank_transform.translation.y + (delta * SPEED) < next_max.1 as f32 {
-                    info!("Turn found at: {:?}", tank_transform.translation);
-                    tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
-                    tank_transform.translation.y = attacker_turns.turn_locations.get(turn_index).unwrap().1 as f32;
-                    tank_transform.rotate_z(-PI/2.);
-                    tank_movement.turns_done += 1;
-                } else {
+                // info!("tank SOUTH");
+                if let Some(next_max) = attacker_turns.turn_locations.get(turn_index) {
+                    if tank_transform.translation.y + (delta * SPEED) < next_max.1 as f32 {
+                        // info!("Turn found at: {:?}", tank_transform.translation);
+                        tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
+                        tank_transform.translation.y = attacker_turns.turn_locations.get(turn_index).unwrap().1 as f32;
+                        tank_movement.turns_done += 1;
+                    } else {
+                        tank_transform.translation.y -= delta * SPEED;
+                    }
+                }
+                else {
                     tank_transform.translation.y -= delta * SPEED;
                 }
             },
             Direct::EAST => {
-                info!("tank EAST");
-                if tank_transform.translation.x + delta * SPEED > next_max.0 as f32 {
-                    info!("Turn found at: {:?}", tank_transform.translation);
-                    tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
-                    tank_transform.translation.x = attacker_turns.turn_locations.get(turn_index).unwrap().0 as f32;
-                    tank_transform.rotate_z(-PI/2.);
-                    tank_movement.turns_done += 1;
-                } else {
+                // info!("tank EAST");
+                if let Some(next_max) = attacker_turns.turn_locations.get(turn_index) {
+                    if tank_transform.translation.x + delta * SPEED > next_max.0 as f32 {
+                        // info!("Turn found at: {:?}", tank_transform.translation);
+                        tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
+                        tank_transform.translation.x = attacker_turns.turn_locations.get(turn_index).unwrap().0 as f32;
+                        tank_movement.turns_done += 1;
+                    } else {
+                        tank_transform.translation.x += delta * SPEED;
+                    }
+                }
+                else {
                     tank_transform.translation.x += delta * SPEED;
                 }
             },
             Direct::WEST => {
-                info!("tank WEST");
-                if tank_transform.translation.x + delta * SPEED < next_max.0 as f32 {
-                    info!("Turn found at: {:?}", tank_transform.translation);
-                    tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
-                    tank_transform.translation.x = attacker_turns.turn_locations.get(turn_index).unwrap().0 as f32;
-                    tank_transform.rotate_z(-PI/2.);
-                    tank_movement.turns_done += 1;
+                // info!("tank WEST");
+                if let Some(next_max) = attacker_turns.turn_locations.get(turn_index) {
+                    if tank_transform.translation.x + delta * SPEED < next_max.0 as f32 {
+                        // info!("Turn found at: {:?}", tank_transform.translation);
+                        tank_movement.direction = attacker_turns.direction.get(turn_index).unwrap().clone();
+                        tank_transform.translation.x = attacker_turns.turn_locations.get(turn_index).unwrap().0 as f32;
+                        tank_movement.turns_done += 1;
+                    } else {
+                        tank_transform.translation.x -= delta * SPEED;
+                    }
                 } else {
                     tank_transform.translation.x -= delta * SPEED;
                 }
@@ -78,6 +90,19 @@ pub fn move_attackers(
     }
 }
 
+pub fn turn_attackers(
+    mut attacker_query: Query<(&mut TankMovement, &mut Transform)>,
+) {
+    // TODO: update query to only return if Direct Changed...
+    for (tank_movement, mut tank_trans) in attacker_query.iter_mut() {
+        match tank_movement.direction {
+            Direct::NORTH => tank_trans.rotation = Quat::from_rotation_z(PI),
+            Direct::SOUTH => tank_trans.rotation = Quat::from_rotation_z(0.),
+            Direct::EAST => tank_trans.rotation = Quat::from_rotation_z(PI/2.),
+            Direct::WEST => tank_trans.rotation = Quat::from_rotation_z(-PI/2.),
+        }
+    }
+}
 
 pub fn spawn_red_tank(
     mut commands: Commands,
@@ -98,7 +123,7 @@ pub fn spawn_red_tank(
             },
             ..default()
         }).id();
-        info!("RedTankAttacker spawned: id={}",id.index());
+        // info!("RedTankAttacker spawned: id={}",id.index());
     }
 }
 

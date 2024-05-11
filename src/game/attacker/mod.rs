@@ -5,7 +5,9 @@ pub mod components;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use self::systems::{move_attackers, spawn_red_tank};
+use crate::AppState;
+
+use self::systems::{init_attacker_turns, move_attackers, spawn_red_tank, turn_attackers};
 use super::GameState;
 
 pub struct AttackerPlugin;
@@ -13,7 +15,9 @@ pub struct AttackerPlugin;
 impl Plugin for AttackerPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Update, (spawn_red_tank, move_attackers).run_if(in_state(GameState::Running)));
+            .init_resource::<AttackerTurns>()
+            .add_systems(OnEnter(AppState::Game), init_attacker_turns) // TODO: only run init_attacker_turns once (but after map is setup)
+            .add_systems(Update, (spawn_red_tank, move_attackers, turn_attackers).run_if(in_state(GameState::Running)));
     }
 }
 
@@ -24,17 +28,28 @@ pub struct Tank;
 pub struct RedTankAttacker {
     tank: Tank,
     sprite_bundle: SpriteBundle,
-    grid_coords: GridCoords,
+    tank_movement: TankMovement,
+}
+
+#[derive(Default, Component)]
+pub struct TankMovement {
     direction: Direct,
+    turns_done: i32,
 }
 
-#[derive(Component, Copy, Clone, Eq, PartialEq, Debug, Hash, Reflect)]
-pub struct Direct {
-    grid_coords: GridCoords,
+#[derive(Resource, Default, Clone, Debug)]
+pub struct AttackerTurns {
+    turn_locations: Vec<(i32,i32)>,
+    direction: Vec<Direct>,
 }
 
-impl Default for Direct {
-    fn default() -> Self {
-        Self { grid_coords: GridCoords::new(0,-1) }
-    }
+#[derive(Default, Component, Clone, Debug)]
+pub enum Direct {
+    NORTH,
+    #[default]
+    SOUTH,
+    EAST,
+    WEST
 }
+
+

@@ -49,8 +49,6 @@ impl Plugin for AppPlugin {
             .add_systems(Startup, spawn_camera)
             .add_systems(Update, (
                 handle_game_over,
-                exit_game,
-                transition_to_game_state,
                 transition_to_main_menu_state));
     }
 
@@ -72,15 +70,6 @@ impl Plugin for AppPlugin {
 
     fn is_unique(&self) -> bool {
         true
-    }
-}
-
-pub fn exit_game(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut app_exit_event_writer: EventWriter<AppExit>,
-) {
-    if keyboard_input.just_pressed(KeyCode::Q) {
-        app_exit_event_writer.send(AppExit);
     }
 }
 
@@ -107,21 +96,6 @@ pub fn spawn_camera(
         },
         MyCameraMarker,
     ));
-}
-
-pub fn transition_to_game_state(
-    keyboard_input: Res<Input<KeyCode>>,
-    app_state: Res<State<AppState>>,
-    mut next_app_state: ResMut<NextState<AppState>>,
-    _next_sim_state: ResMut<NextState<GameState>>,
-) {
-    if keyboard_input.just_pressed(KeyCode::G) {
-        if app_state.get() != &AppState::Game {
-            info!("AppState: Game");
-            next_app_state.set(AppState::Game);
-            // next_sim_state.set(GameState::Running);
-        }
-    }
 }
 
 pub fn transition_to_main_menu_state(

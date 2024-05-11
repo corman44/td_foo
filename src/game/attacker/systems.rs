@@ -96,10 +96,10 @@ pub fn turn_attackers(
     // TODO: update query to only return if Direct Changed...
     for (tank_movement, mut tank_trans) in attacker_query.iter_mut() {
         match tank_movement.direction {
-            Direct::NORTH => tank_trans.rotation = Quat::from_rotation_z(PI),
-            Direct::SOUTH => tank_trans.rotation = Quat::from_rotation_z(0.),
-            Direct::EAST => tank_trans.rotation = Quat::from_rotation_z(PI/2.),
-            Direct::WEST => tank_trans.rotation = Quat::from_rotation_z(-PI/2.),
+            Direct::NORTH => tank_trans.rotation = Quat::from_rotation_z(0.),
+            Direct::SOUTH => tank_trans.rotation = Quat::from_rotation_z(PI),
+            Direct::EAST => tank_trans.rotation = Quat::from_rotation_z(-PI/2.),
+            Direct::WEST => tank_trans.rotation = Quat::from_rotation_z(PI/2.),
         }
     }
 }

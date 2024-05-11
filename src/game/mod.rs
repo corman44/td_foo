@@ -8,6 +8,8 @@ pub mod mouse;
 
 use bevy::prelude::*;
 
+use crate::AppState;
+
 use self::{
     attacker::AttackerPlugin,
     defender::systems::DefenderPlugin,
@@ -25,7 +27,7 @@ impl Plugin for GamePlugin {
         app
             .add_state::<GameState>()
             .add_plugins((AttackerPlugin, DefenderPlugin, MapPlugin, OverlayPlugin, PlayerPlugin, MousePlugin))
-            .add_systems(Update, pause_game);
+            .add_systems(Update, pause_game.run_if(in_state(AppState::Game)));
     }
 }
 

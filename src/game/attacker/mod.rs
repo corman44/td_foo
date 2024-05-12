@@ -2,6 +2,8 @@
 pub mod systems;
 pub mod components;
 
+use std::default;
+
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
@@ -15,6 +17,7 @@ pub struct AttackerPlugin;
 impl Plugin for AttackerPlugin {
     fn build(&self, app: &mut App) {
         app
+            .add_state::<AttackerSpawnState>()
             .init_resource::<AttackerTurns>()
             .add_systems(OnEnter(AppState::Game), init_attacker_turns) // TODO: only run init_attacker_turns once (but after map is setup)
             .add_systems(Update, (spawn_red_tank, move_attackers, turn_attackers).run_if(in_state(GameState::Running)));
@@ -52,4 +55,10 @@ pub enum Direct {
     WEST
 }
 
-
+#[derive(States, Debug, Clone, Copy, Hash, PartialEq, Eq, Default)]
+pub enum AttackerSpawnState {
+    #[default]
+    Idle,
+    Spawning,
+    Finished,
+}

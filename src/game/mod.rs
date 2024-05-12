@@ -14,7 +14,7 @@ use self::{
     attacker::AttackerPlugin,
     defender::systems::DefenderPlugin,
     map::MapPlugin,
-    overlay::systems::OverlayPlugin,
+    overlay::OverlayPlugin,
     player::systems::PlayerPlugin,
     mouse::MousePlugin,
     systems::pause_game

@@ -1,5 +1,4 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct Attacker;
-
+pub struct StartRoundButton;

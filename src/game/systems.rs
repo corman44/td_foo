@@ -18,6 +18,7 @@ pub fn pause_game(
             } else {
                 next_game_state.set(GameState::Running);
             }
+
         }
     }
 }

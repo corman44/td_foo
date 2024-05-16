@@ -21,7 +21,7 @@ impl Plugin for GamePlugin {
         app
             .add_state::<GameState>()
             .add_plugins((AttackerPlugin, DefenderPlugin, MapPlugin, OverlayPlugin, PlayerPlugin, MousePlugin))
-            .add_systems(Update, pause_game.run_if(in_state(AppState::Game)));
+            .add_systems(Update, pause_game);
     }
 }
 

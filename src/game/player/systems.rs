@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 
-pub struct PlayerPlugin;
+use super::PlayerHealth;
 
-impl Plugin for PlayerPlugin {
-    fn build(&self, _app: &mut App) {
-    }
+pub fn print_player_health(
+    player_health: Res<PlayerHealth>,
+) {
+    info!("PlayerHealth: {}", player_health.0);
 }

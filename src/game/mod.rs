@@ -11,13 +11,7 @@ use bevy::prelude::*;
 use crate::AppState;
 
 use self::{
-    attacker::AttackerPlugin,
-    defender::systems::DefenderPlugin,
-    map::MapPlugin,
-    overlay::OverlayPlugin,
-    player::systems::PlayerPlugin,
-    mouse::MousePlugin,
-    systems::pause_game
+    attacker::AttackerPlugin, defender::systems::DefenderPlugin, map::MapPlugin, mouse::MousePlugin, overlay::OverlayPlugin, player::PlayerPlugin, systems::pause_game
 };
 
 pub struct GamePlugin;

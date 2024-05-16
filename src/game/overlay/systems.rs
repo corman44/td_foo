@@ -12,6 +12,7 @@ pub fn build_game_overlay(
         (ButtonBundle {
                 style: START_BUTTON_STYLE,
                 background_color: START_BUTTON_COLOR.into(),
+                border_color: Color::GREEN.into(),
                 ..default()
             },
             StartRoundButton,

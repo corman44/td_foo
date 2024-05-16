@@ -15,6 +15,8 @@ pub fn pause_game(
         if input.just_pressed(KeyCode::Escape) {
             if *game_state.get() == GameState::Running {
                 next_game_state.set(GameState::Paused);
+            } else {
+                next_game_state.set(GameState::Running);
             }
         }
     }

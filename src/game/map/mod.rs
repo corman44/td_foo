@@ -31,7 +31,7 @@ pub struct DefenderArea;
 
 #[derive(Default, Bundle, LdtkIntCell)]
 pub struct DefenderAreaBundle {
-    DefenderArea: DefenderArea,
+    defender_area: DefenderArea,
 }
 
 #[derive(Default, Component)]
@@ -39,7 +39,7 @@ pub struct AttackerArea;
 
 #[derive(Default, Bundle, LdtkIntCell)]
 pub struct AttackerAreaBundle {
-    AttackerArea: AttackerArea,
+    attack_area: AttackerArea,
 }
 
 #[derive(Default, Component)]
@@ -47,7 +47,7 @@ pub struct UnusedArea;
 
 #[derive(Default, Bundle, LdtkIntCell)]
 pub struct UnusedAreaBundle {
-    UnusedArea: UnusedArea,
+    unused_area: UnusedArea,
 }
 
 #[derive(Default, Resource)]

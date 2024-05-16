@@ -13,7 +13,7 @@ pub fn interact_start_round_button(
         match *interaction {
             Interaction::Pressed => {
                 next_attacker_spawn_state.set(AttackerSpawnState::Spawning);
-                *background_color = HOVER_START_BUTTON_COLOR.into();
+                *background_color = START_BUTTON_COLOR.into();
             },
             Interaction::Hovered => {
                 *background_color = HOVER_START_BUTTON_COLOR.into();

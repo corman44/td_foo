@@ -1,11 +1,11 @@
 use std::{collections::HashSet, f32::consts::PI};
 
-use bevy::prelude::*;
+use bevy::{prelude::*, transform::commands};
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::game::{attacker::TankMovement, map::AttackerArea};
+use crate::game::{attacker::TankMovement, map::AttackerArea, player::PlayerHealth};
 
-use super::{AttackerTurns, Direct, RedTankAttacker, Tank};
+use super::{AttackerSpawnState, AttackerSpawnTimer, AttackerTurns, Direct, RedTankAttacker, Tank};
 
 const NORTH_GC: GridCoords = GridCoords{ x:0, y:1 };
 const EAST_GC: GridCoords = GridCoords{ x:1, y:0 };
@@ -125,6 +125,36 @@ pub fn spawn_red_tank(
         }).id();
         // info!("RedTankAttacker spawned: id={}",id.index());
     }
+}
+
+pub fn red_tank_spawner(
+    asset_server: Res<AssetServer>,
+    mut attacker_spawn_timer: ResMut<AttackerSpawnTimer>,
+    mut commands: Commands,
+    attacker_query: Query<(&mut TankMovement, &mut Transform)>,
+    mut next_attacker_spawn_state: ResMut<NextState<AttackerSpawnState>>,
+    time: Res<Time>,
+) {
+    if attacker_spawn_timer.0.tick(time.delta()).just_finished() && attacker_query.iter().count() < 5 {
+        let texture = asset_server.load(r"kenney_top-down-tanks-redux\PNG\Default size\tank_red_cj.png");
+        let id = commands.spawn(RedTankAttacker {
+            sprite_bundle: SpriteBundle {
+                texture,
+                transform: Transform { translation: Vec3::new(480., 992., 6.), ..default() },
+                ..default()
+            },
+            tank_movement: TankMovement {
+                turns_done: 0,
+                direction: Direct::SOUTH,
+            },
+            ..default()
+        }).id();
+        attacker_spawn_timer.0.reset();
+    } else if attacker_query.iter().count() >= 5 {
+        next_attacker_spawn_state.set(AttackerSpawnState::Finished);
+    }
+    // info!("attacker_spawner_timer = {:?}", attacker_spawn_timer);
+    // info!("attacker_count = {:?}", attacker_query.iter().count());
 }
 
 pub fn init_attacker_turns(

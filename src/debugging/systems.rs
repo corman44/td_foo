@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::{game::{attacker::AttackerSpawnState, GameState}, AppState};
+
 pub fn mouse_button_input(
     buttons: Res<Input<MouseButton>>,
 ) {
@@ -16,4 +18,23 @@ pub fn mouse_button_input(
     // if buttons.any_just_pressed([MouseButton::Left, MouseButton::Right]) {
     //     // Either the left or the right button was just pressed
     // }
+}
+
+pub fn print_state_change(
+    app_state: Res<State<AppState>>,
+    game_state: Res<State<GameState>>,
+    attack_spawn_state: Res<State<AttackerSpawnState>>,
+) {
+    if app_state.is_changed() {
+        info!("AppState::{:?}",app_state.get());
+    }
+
+    if game_state.is_changed() {
+        info!("GameState::{:?}", game_state.get());
+    }
+
+    if attack_spawn_state.is_changed() {
+        info!("AttackerSpawnState::{:?}", attack_spawn_state.get());
+    }
+
 }

@@ -5,6 +5,7 @@ mod debugging;
 use bevy::{app::AppExit, prelude::*, window::{PrimaryWindow, WindowResolution}};
 use bevy_kira_audio::prelude::*;
 
+use debugging::DebuggingPlugin;
 use game::{GamePlugin, GameState};
 use menus::MenusPlugin;
 
@@ -44,7 +45,7 @@ impl Plugin for AppPlugin {
                     }),
                 AudioPlugin,
                 GamePlugin,
-                // DebuggingPlugin,
+                DebuggingPlugin,
                 MenusPlugin))
             .add_systems(Startup, spawn_camera)
             .add_systems(Update, (

@@ -1,10 +1,9 @@
 use bevy::prelude::*;
 use td_foo::AppPlugin;
 
-// TODO: spawn Attackers with time delays
-// TODO: fix broken Game/App State and pause menu spawning...
-/* --- Developer Info ---
+// TODO: decrement "health" if attacker reaches end of final tile
 
+/* --- Developer Info ---
     * Controls
         S -> Spawn Tank at starting pos
  */

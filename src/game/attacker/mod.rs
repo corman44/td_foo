@@ -7,17 +7,22 @@ use bevy_ecs_ldtk::prelude::*;
 
 use crate::AppState;
 
-use self::systems::{init_attacker_turns, move_attackers, spawn_red_tank, turn_attackers};
+use self::systems::{init_attacker_turns, move_attackers, red_tank_spawner, spawn_red_tank, turn_attackers};
 use super::GameState;
 
 pub struct AttackerPlugin;
-
+ 
 impl Plugin for AttackerPlugin {
     fn build(&self, app: &mut App) {
         app
+            .add_state::<AttackerSpawnState>()
             .init_resource::<AttackerTurns>()
+            .insert_resource(AttackerSpawnTimer(Timer::from_seconds(2.0, TimerMode::Repeating)))
             .add_systems(OnEnter(AppState::Game), init_attacker_turns) // TODO: only run init_attacker_turns once (but after map is setup)
-            .add_systems(Update, (spawn_red_tank, move_attackers, turn_attackers).run_if(in_state(GameState::Running)));
+            .add_systems(Update, (spawn_red_tank, move_attackers, turn_attackers).run_if(in_state(GameState::Running)))
+            .add_systems(Update, red_tank_spawner
+                .run_if(in_state(AttackerSpawnState::Spawning))
+                .run_if(in_state(GameState::Running)));
     }
 }
 
@@ -52,4 +57,13 @@ pub enum Direct {
     WEST
 }
 
+#[derive(States, Debug, Clone, Copy, Hash, PartialEq, Eq, Default)]
+pub enum AttackerSpawnState {
+    #[default]
+    Idle,
+    Spawning,
+    Finished,
+}
 
+#[derive(Default, Clone, Debug, Resource)]
+pub struct AttackerSpawnTimer(Timer);

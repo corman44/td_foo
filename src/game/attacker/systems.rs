@@ -134,7 +134,7 @@ pub fn red_tank_spawner(
 ) {
     if attacker_spawn_timer.0.tick(time.delta()).just_finished() && attacker_query.iter().count() < 5 {
         let texture = asset_server.load(r"kenney_top-down-tanks-redux\PNG\Default size\tank_red_cj.png");
-        let id = commands.spawn(RedTankAttacker {
+        let _id: Entity = commands.spawn(RedTankAttacker {
             sprite_bundle: SpriteBundle {
                 texture,
                 transform: Transform { translation: Vec3::new(480., 992., 6.), ..default() },

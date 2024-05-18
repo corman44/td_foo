@@ -1,10 +1,7 @@
 use std::{collections::HashSet, f32::consts::PI};
-
 use bevy::{prelude::*, transform::commands};
 use bevy_ecs_ldtk::prelude::*;
-
-use crate::game::{attacker::TankMovement, map::AttackerArea, player::PlayerHealth};
-
+use crate::game::{attacker::TankMovement, defender::{DefenderStats, Health}, map::AttackerArea, player::PlayerHealth};
 use super::{AttackerSpawnState, AttackerSpawnTimer, AttackerTurns, Direct, RedTankAttacker, Tank};
 
 const NORTH_GC: GridCoords = GridCoords{ x:0, y:1 };
@@ -137,7 +134,7 @@ pub fn red_tank_spawner(
 ) {
     if attacker_spawn_timer.0.tick(time.delta()).just_finished() && attacker_query.iter().count() < 5 {
         let texture = asset_server.load(r"kenney_top-down-tanks-redux\PNG\Default size\tank_red_cj.png");
-        let id = commands.spawn(RedTankAttacker {
+        let _id: Entity = commands.spawn(RedTankAttacker {
             sprite_bundle: SpriteBundle {
                 texture,
                 transform: Transform { translation: Vec3::new(480., 992., 6.), ..default() },
@@ -257,6 +254,19 @@ pub fn init_attacker_turns(
     turns_res.turn_locations = attacker_turns.turn_locations.clone();
     // info!("attacker turn locations: {:?}", attacker_turns.turn_locations);
     // info!("attacker turn directions: {:?}", attacker_turns.direction);
+}
+
+pub fn red_tank_despawner(
+    attacker_query: Query<(&Transform, Entity), With<Tank>>,
+    mut defender_stats: ResMut<DefenderStats>,
+    mut commands: Commands,
+) {
+    for (transform, entity) in attacker_query.iter() {
+        if transform.translation.y < 25.0 {
+            commands.entity(entity).despawn();
+            defender_stats.health -= Health(5);
+        }
+    }
 }
 
 fn gridcoords_to_xy(gc: &GridCoords) -> (i32, i32) {

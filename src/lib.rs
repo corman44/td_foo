@@ -52,26 +52,6 @@ impl Plugin for AppPlugin {
                 handle_game_over,
                 transition_to_main_menu_state));
     }
-
-    fn ready(&self, _app: &App) -> bool {
-        true
-    }
-
-    fn finish(&self, _app: &mut App) {
-        // do nothing
-    }
-
-    fn cleanup(&self, _app: &mut App) {
-        // do nothing
-    }
-
-    fn name(&self) -> &str {
-        std::any::type_name::<Self>()
-    }
-
-    fn is_unique(&self) -> bool {
-        true
-    }
 }
 
 pub fn handle_game_over(

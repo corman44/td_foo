@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-use crate::{game::{attacker::AttackerSpawnState, GameState}, AppState};
+use crate::{game::{attacker::AttackerSpawnState, defender::DefenderStats, GameState}, AppState};
+
+use super::{DebugCounter, DebugTimer};
 
 pub fn mouse_button_input(
     buttons: Res<Input<MouseButton>>,
@@ -37,4 +39,21 @@ pub fn print_state_change(
         info!("AttackerSpawnState::{:?}", attack_spawn_state.get());
     }
 
+}
+
+pub fn print_defender_stats(
+    defender_stats: Res<DefenderStats>,
+) {
+    info!("DefenderStats: {:?}", defender_stats);
+}
+
+pub fn debug_timer(
+    mut debug_counter: ResMut<DebugCounter>,
+    mut debug_timer: ResMut<DebugTimer>,
+    time: Res<Time>,
+) {
+    if debug_timer.0.tick(time.delta()).just_finished() {
+        debug_counter.0 += 1;
+        // info!("DebugCounter: {}", debug_counter.0);
+    };
 }

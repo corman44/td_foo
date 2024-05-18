@@ -8,7 +8,7 @@ pub struct DefenderPlugin;
 impl Plugin for DefenderPlugin {
     fn build(&self, app: &mut App) {
         app
-            .init_resource::<DefenderStats>();
+            .insert_resource(DefenderStats::default());
     }
 }
 

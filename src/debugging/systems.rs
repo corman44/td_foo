@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{game::{attacker::AttackerSpawnState, defender::DefenderStats, GameState}, AppState};
+use crate::{game::{attacker::{components::Attacker, AttackerSpawnState, Tank}, defender::DefenderStats, GameState}, AppState};
 
 use super::{DebugCounter, DebugTimer};
 
@@ -45,6 +45,15 @@ pub fn print_defender_stats(
     defender_stats: Res<DefenderStats>,
 ) {
     info!("DefenderStats: {:?}", defender_stats);
+}
+
+
+pub fn print_attacker_locations(
+    attacker_query: Query<(&Transform, Entity), With<Tank>>,
+) {
+    for (trans, entity) in attacker_query.iter() {
+        info!("attacker {:?}: {},{}", entity, trans.translation.x, trans.translation.y);
+    }
 }
 
 pub fn debug_timer(

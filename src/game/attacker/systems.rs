@@ -1,7 +1,7 @@
 use std::{collections::HashSet, f32::consts::PI};
 use bevy::{prelude::*, transform::commands};
 use bevy_ecs_ldtk::prelude::*;
-use crate::game::{attacker::TankMovement, map::AttackerArea, player::PlayerHealth};
+use crate::game::{attacker::TankMovement, defender::{DefenderStats, Health}, map::AttackerArea, player::PlayerHealth};
 use super::{AttackerSpawnState, AttackerSpawnTimer, AttackerTurns, Direct, RedTankAttacker, Tank};
 
 const NORTH_GC: GridCoords = GridCoords{ x:0, y:1 };
@@ -257,14 +257,15 @@ pub fn init_attacker_turns(
 }
 
 pub fn red_tank_despawner(
-    attacker_query: Query<(& Transform, Entity), With<Tank>>,
+    attacker_query: Query<(&Transform, Entity), With<Tank>>,
+    mut defender_stats: ResMut<DefenderStats>,
     mut commands: Commands,
 ) {
-    // TODO: determine location needed to despawn tank
-    // TODO: loop through each tank and check location is at/past the goal yet
-    // TODO: despawn the entity and decrement the Defenders Health
     for (transform, entity) in attacker_query.iter() {
-        commands.entity(entity).despawn()
+        if transform.translation.y < 25.0 {
+            commands.entity(entity).despawn();
+            defender_stats.health -= Health(5);
+        }
     }
 }
 

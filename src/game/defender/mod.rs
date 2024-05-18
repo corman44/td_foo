@@ -1,6 +1,8 @@
 pub mod systems;
 pub mod components;
 
+use std::ops::SubAssign;
+
 use bevy::prelude::*;
 
 pub struct DefenderPlugin;
@@ -14,7 +16,7 @@ impl Plugin for DefenderPlugin {
 
 
 #[derive(Component, Debug)]
-pub struct Coins(i32);
+pub struct Coins(pub i32);
 
 impl Default for Coins {
     fn default() -> Self {
@@ -23,7 +25,7 @@ impl Default for Coins {
 }
 
 #[derive(Component, Debug)]
-pub struct Health(i32);
+pub struct Health(pub i32);
 
 impl Default for Health {
     fn default() -> Self {
@@ -31,8 +33,14 @@ impl Default for Health {
     }
 }
 
+impl SubAssign for Health {
+    fn sub_assign(&mut self, rhs: Self) {
+        self.0 -= rhs.0;
+    }
+}
+
 #[derive(Resource, Debug, Default)]
 pub struct DefenderStats {
-    coins: Coins,
-    health: Health,
+    pub coins: Coins,
+    pub health: Health,
 }

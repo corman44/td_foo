@@ -1,7 +1,7 @@
 use std::{collections::HashSet, f32::consts::PI};
-use bevy::{prelude::*, transform::commands};
+use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-use crate::game::{attacker::TankMovement, defender::{DefenderStats, Health}, map::AttackerArea, player::PlayerHealth};
+use crate::game::{attacker::TankMovement, defender::components::{DefenderStats, Health}, map::AttackerArea};
 use super::{AttackerSpawnState, AttackerSpawnTimer, AttackerTurns, Direct, RedTankAttacker, Tank};
 
 const NORTH_GC: GridCoords = GridCoords{ x:0, y:1 };

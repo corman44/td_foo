@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 
-use crate::game::{attacker::AttackerSpawnState, defender::{systems::spawn_blue_defender, Coins, DefenderStats}, mouse::MouseSelectionState, GameState};
-
+use crate::game::{attacker::AttackerSpawnState, defender::{components::{Coins, DefenderStats}, systems::spawn_blue_defender}, mouse::MouseSelectionState, GameState};
 use super::{components::{NewDefender1Button, StartRoundButton}, style::{DEFENDER1_BUTTON_COLOR, DEFENDER1_HOVER_BUTTON_COLOR, HOVER_START_BUTTON_COLOR, START_BUTTON_COLOR}};
-
 
 pub fn interact_start_round_button(
     mut next_attacker_spawn_state: ResMut<NextState<AttackerSpawnState>>,
@@ -38,11 +36,12 @@ pub fn interact_new_defender1_button(
     mut commands: Commands,
     mut defender_stats: ResMut<DefenderStats>,
     mut next_mouse_selection_state: ResMut<NextState<MouseSelectionState>>,
+    mouse_selection_state: Res<State<MouseSelectionState>>,
 ) {
     if let Ok((interaction, mut bg_color)) = button_query.get_single_mut() {
         match *interaction {
             Interaction::Pressed => {
-                if next_mouse_selection_state.0.clone().unwrap() == MouseSelectionState::NewDefenderSelected {
+                if *mouse_selection_state.get() == MouseSelectionState::Idle {
                     if defender_stats.coins >= Coins(5) {
                         *bg_color = DEFENDER1_BUTTON_COLOR.into();
                         spawn_blue_defender(&asset_server,commands);

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{game::{attacker::{components::Attacker, AttackerSpawnState, Tank}, defender::DefenderStats, GameState}, AppState};
+use crate::{game::{attacker::{components::Attacker, AttackerSpawnState, Tank}, defender::components::DefenderStats, mouse::MouseSelectionState, GameState}, AppState};
 
 use super::{DebugCounter, DebugTimer};
 
@@ -26,6 +26,7 @@ pub fn print_state_change(
     app_state: Res<State<AppState>>,
     game_state: Res<State<GameState>>,
     attack_spawn_state: Res<State<AttackerSpawnState>>,
+    mouse_selection_state: Res<State<MouseSelectionState>>,
 ) {
     if app_state.is_changed() {
         info!("AppState::{:?}",app_state.get());
@@ -39,6 +40,9 @@ pub fn print_state_change(
         info!("AttackerSpawnState::{:?}", attack_spawn_state.get());
     }
 
+    if mouse_selection_state.is_changed() {
+        info!("MouseSelectionState::{:?}", mouse_selection_state.get());
+    }
 }
 
 pub fn print_defender_stats(

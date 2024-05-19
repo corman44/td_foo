@@ -3,7 +3,7 @@ pub mod components;
 
 use bevy::prelude::*;
 
-use crate::game::defender::DefenderStats;
+use crate::game::defender::components::DefenderStats;
 
 use self::systems::{debug_timer, mouse_button_input, print_attacker_locations, print_defender_stats, print_state_change};
 

@@ -19,8 +19,8 @@ impl Plugin for DebuggingPlugin {
                 print_defender_stats,
                 // print_attacker_locations
             ).run_if(
-                resource_changed::<DebugCounter>()
-                .and_then(not(resource_added::<DebugCounter>()))
+                resource_changed::<DefenderStats>()
+                // .and_then(not(resource_added::<DefenderStats>()))
                 // resource_exists::<DefenderStats>()
                 // .and_then(resource_changed::<DefenderStats>())
                 // .or_else(resource_changed::<DebugCounter>())

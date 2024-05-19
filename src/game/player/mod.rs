@@ -13,7 +13,8 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app
             .init_resource::<PlayerHealth>()
-            .add_systems(OnEnter(AppState::Game), print_player_health);
+            // .add_systems(OnEnter(AppState::Game), print_player_health)
+            ;
 
     }
 }

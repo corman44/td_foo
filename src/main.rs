@@ -1,12 +1,8 @@
 use bevy::prelude::*;
 use td_foo::AppPlugin;
 
-// TODO: decrement "health" if attacker reaches end of final tile
-
-/* --- Developer Info ---
-    * Controls
-        S -> Spawn Tank at starting pos
- */
+// TODO: spawn Defender on Mouse Click
+// TODO: create "shooting" for Defender if Attacker is in range
 
 fn main() {
     App::new()

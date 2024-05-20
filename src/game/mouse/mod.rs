@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use self::system::track_click_and_drag;
+use self::system::{check_mouse_click, track_click_and_drag};
 
 pub mod system;
 pub mod components;
@@ -12,6 +12,8 @@ impl Plugin for MousePlugin {
         app
             .add_state::<MouseSelectionState>()
             // .add_systems(Update, track_click_and_drag)
+            .add_systems(Update, check_mouse_click
+                .run_if(in_state(MouseSelectionState::NewDefenderSelected)))
             ;
     }
 }

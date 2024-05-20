@@ -1,5 +1,7 @@
 use bevy::{input::{mouse::{MouseButtonInput, MouseMotion}, ButtonState}, prelude::*, window::PrimaryWindow};
 
+use super::MouseSelectionState;
+
 
 pub fn find_mouse_position_on_click(
     mut mouse_button_input_events: EventReader<MouseButtonInput>,
@@ -30,5 +32,15 @@ pub fn track_click_and_drag(
             let position = q_windows.single().cursor_position().unwrap();
             info!("Mouse position: {:?}", position);
         }
+    }
+}
+
+pub fn check_mouse_click(
+    mut mouse_button_input: Res<Input<MouseButton>>,
+    mut next_mouse_selection_state: ResMut<NextState<MouseSelectionState>>,
+) {
+    if mouse_button_input.just_pressed(MouseButton::Left) {
+        info!("MouseButtonInput: {:?}", mouse_button_input);
+        next_mouse_selection_state.set(MouseSelectionState::Idle);
     }
 }

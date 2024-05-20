@@ -35,7 +35,7 @@ pub struct Defender{
 }
 
 #[derive(Component)]
-pub struct Active(bool);
+pub struct Active(pub bool);
 
 impl Default for Active {
     fn default() -> Self {

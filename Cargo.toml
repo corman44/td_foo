@@ -48,3 +48,11 @@ opt-level = 1
 
 [profile.dev.package."*"]
 opt-level = 3
+
+[profile.release]
+opt-level = 'z'
+lto = "thin"
+codegen-units = 1
+
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"

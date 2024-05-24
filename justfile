@@ -1,3 +1,7 @@
+build-wasm:
+    cargo build --release --target wasm32-unknown-unknown
+    wasm-bindgen --no-typescript --target web --out-dir ./out/ --out-name "td_foo" ./target/wasm32-unknown-unknown/release/td_foo.wasm
+
 debug:
     RUST_LOG=debug cargo run
 
